@@ -1,0 +1,31 @@
+﻿
+<div  id="container" class="container">
+  <mat-card class="login-card" >
+    <form class="loginForm" name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+      <!-- <div> -->
+      <mat-card-header>
+        <div class="customHeader">
+          <div class="header-image"></div>
+          <div class="center-text regHeader">Login</div>
+        </div>
+      </mat-card-header>
+      <mat-card-content class="field-item">
+        <mat-form-field style="display: block" [ngClass]="{  'mat-input-error': f.submitted && !email.valid }">
+          <input matInput type="text" placeholder="Email" name="email" [(ngModel)]="model.email"
+            #email="ngModel" required />
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-content class="field-item">
+        <mat-form-field style="display: block"
+          [ngClass]="{ 'display': 'block','mat-input-error': f.submitted && !password.valid }">
+          <input matInput type="password" placeholder="Password" name="password" [(ngModel)]="model.password"
+            #password="ngModel" required />
+        </mat-form-field>
+      </mat-card-content>
+      <div class="center-text">You don't have an account ? <a [routerLink]="['/register']">Register here</a> </div>
+      <mat-card-actions class="action-item">
+        <button mat-raised-button [disabled]="isValidating">Login</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

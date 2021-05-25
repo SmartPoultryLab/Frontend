@@ -1,0 +1,101 @@
+
+
+<mat-progress-bar *ngIf="isloading"  class="progress-bar"   mode="indeterminate"  ></mat-progress-bar>
+
+<div *ngIf="!authService.isAuthenticated()">
+  <div class="background-forms">
+    <article class="backAnimation"></article>
+  </div>
+  <login-form *ngIf="router.url.toString().includes('/login')" (isAuth)="isAuth($event)"></login-form>
+  <register-form *ngIf="router.url == '/register'" (isAuth)="isAuth($event)"></register-form>
+</div>
+<div *ngIf="authService.isAuthenticated()" [ngClass]="uiContent"  role="main">
+  <mat-sidenav-container class="app-container" autosize fullscreen>
+   <mat-sidenav dark #sidenav id="appnav" [mode]="mode" [opened]="!isMobile">
+      <mat-card   class="profile-card">
+        <mat-card-header  >
+          <div  mat-card-avatar class="avatar">
+            <img [src]="user?.avatarUrl" class="avatar" alt="logo">
+          </div>
+          <mat-card-title [hidden]="user!==null && user!==undefined" style="padding:5px;">
+            {{user?.fullName}}
+          </mat-card-title>
+
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+
+        </mat-card-header>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>Profile</button>
+          <button mat-menu-item (click)="logout()">Logout</button>
+        </mat-menu>
+      </mat-card>
+      <mat-nav-list >
+        <a mat-list-item routerLink="dashboard">
+          <mat-icon mat-list-icon >insert_chart_outline</mat-icon>
+          <span mat-line>Dashboard</span>
+        </a>
+        <a mat-list-item routerLink="orders">
+          <mat-icon mat-list-icon>account_circle</mat-icon>
+          <span mat-line>Owners</span>
+        </a>
+        <a mat-list-item routerLink="customers">
+          <mat-icon mat-list-icon>view_module</mat-icon>
+          <span mat-line>Farms</span>
+        </a>
+        <a mat-list-item routerLink="products">
+          <mat-icon mat-list-icon>biotech</mat-icon>
+          <span mat-line>Inspections</span>
+        </a>
+        <a mat-list-item routerLink="products">
+          <mat-icon mat-list-icon>search</mat-icon>
+          <span mat-line>Scan Data</span>
+        </a>
+        <a mat-list-item routerLink="products">
+          <mat-icon mat-list-icon>travel_explore</mat-icon>
+          <span mat-line>Atlas Of Diseases</span>
+        </a>
+        <a mat-list-item routerLink="products">
+          <mat-icon mat-list-icon>summarize</mat-icon>
+          <span mat-line>Reports</span>
+        </a>
+        <a mat-list-item routerLink="products">
+          <mat-icon mat-list-icon>settings</mat-icon>
+          <span mat-line>Settings</span>
+        </a>
+        <a mat-list-item routerLink="about">
+          <mat-icon mat-list-icon>info_outline</mat-icon>
+          <span mat-line>About</span>
+        </a>
+
+      </mat-nav-list>
+
+
+
+    </mat-sidenav>
+    <mat-sidenav-content class="sidenav-content" >
+      <mat-toolbar dark style="background-color:rgb(228, 224, 224)">
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon mat-list-icon>list</mat-icon>
+        </button>
+
+        <span style="float:right">
+
+        </span>
+      </mat-toolbar>
+      <div class="main-content" >
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+
+
+
+
+  </mat-sidenav-container>
+
+</div>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-spin" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

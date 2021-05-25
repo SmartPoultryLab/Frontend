@@ -1,0 +1,49 @@
+﻿<div  id="container" class="container">
+  <mat-card class="login-card" >
+    <form class="loginForm" name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate>
+      <!-- <div> -->
+      <mat-card-header>
+        <div class="customHeader">
+          <div class="header-image"></div>
+          <div class="center-text regHeader">Register</div>
+        </div>
+      </mat-card-header>
+      <mat-card-content class="field-item">
+        <mat-form-field style="display: block" [ngClass]="{  'mat-input-error': f.submitted && !fullName.valid }">
+          <input matInput type="text" placeholder="Full Name" name="fullName" [(ngModel)]="model.fullName"
+            #fullName="ngModel" required />
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-content class="field-item">
+        <mat-form-field style="display: block"
+          [ngClass]="{ 'display': 'block','mat-input-error': f.submitted && !email.valid }">
+          <input matInput type="text" placeholder="Email" name="email" [(ngModel)]="model.email"
+            #email="ngModel" required />
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-content class="field-item">
+        <mat-form-field style="display: block" [ngClass]="{ 'display': 'block','mat-input-error': f.submitted && password.dirty && password.errors && password.errors.required }">
+          <input matInput type="password" placeholder="Password" name="password" [(ngModel)]="model.password"
+            #password="ngModel" compare-password="password_confirmation" parent="true" required />
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-content class="field-item">
+        <mat-form-field style="display: block"
+          [ngClass]="{ 'display': 'block','mat-input-error': f.submitted && !password_confirmation.valid }">
+          <input matInput type="password" placeholder="Confirm Password" name="password_confirmation" [(ngModel)]="model.password_confirmation"
+            #password_confirmation="ngModel" compare-password="password" required />
+            <span class="text-danger"
+              *ngIf="password_confirmation.dirty && password_confirmation.errors && password_confirmation.errors.required">Password is
+              required </span>
+            <span class="text-danger"
+              *ngIf="password_confirmation.dirty && ((password.errors && password.errors.compare) || (password_confirmation.errors && password_confirmation.errors.compare)) && !password_confirmation.errors.required">Password
+              Doesn't match</span>
+        </mat-form-field>
+      </mat-card-content>
+      <div class="center-text">Do you have an account ? <a [routerLink]="['/login']">Login Here</a> </div>
+      <mat-card-actions class="action-item">
+        <button mat-raised-button [disabled]="isValidating">Register</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>
