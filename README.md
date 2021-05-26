@@ -6,28 +6,20 @@ Smart Poultry Laboratory uses a number of open source projects to work properly:
 - [NodeJS](https://nodejs.org) -  JavaScript runtime built on Chrome's V8 JavaScript engine.
 - [Angular](https://angular.io) - Angular is a TypeScript-based open-source web application framework led by the Angular Team at Google and by a community of individuals and corporations. Angular is a complete rewrite from the same team that built AngularJS
 
-
 ## _Frontend-Group Tasks_
 
 ### Tasks list (Ali Gamal)
 
-- [ ] Design Owners Page         (due 07/05/2021)
-- [ ] Design Farms Page          (due 08/05/2021)
-- [ ] Design PostMortem Page     (due 09/05/2021)
+- [x] Design Owners Page         (due 13/05/2021)
+- [x] Design Farms Page          (due 15/05/2021)
+- [ ] Design PostMortem Page     (due 30/05/2021)
   
 ### Tasks list (Lo'ay Mokhtar)
 
-- [ ]  Design PostMortem Page     (due 09/05/2021)
-- [ ]  Design Profile Page        (due 08/05/2021)
-- [ ]  Design Settings Page       (due 09/05/2021)
 
-
-## _Database-Group Tasks_
-
-### Tasks list (Ahmed Saify)
-
-- [ ] Draw the base ERD (due 07/05/2021)
-- [ ] Create first database model (due 07/05/2021)
+- [ ]  Design Profile Page        (due 13/05/2021)
+- [ ]  Design Settings Page       (due 15/05/2021)
+- [ ]  Design PostMortem Page     (due 30/05/2021)
 
 
 ## Prerequisites
