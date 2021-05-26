@@ -34,7 +34,7 @@ Before getting started you should have the following installed and running:
 Clone Repo
 ```
 $ git clone https://github.com/SmartPoultryLab/Frontend.git
-$ cd SmartPoultryLab
+$ cd Frontend
 ```
 
 Setup
