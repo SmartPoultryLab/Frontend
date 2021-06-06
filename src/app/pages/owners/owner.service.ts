@@ -8,7 +8,7 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 
-import { IOrder, IAddress } from './order';
+import { IOrder, IAddress } from './owner';
 import { Product } from '../product';
 
 @Injectable()

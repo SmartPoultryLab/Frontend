@@ -5,7 +5,7 @@ import {
   Router,
   CanDeactivate
 } from "@angular/router";
-import { OrderFormComponent } from "./order-form.component";
+import { OwnerFormComponent } from "./owner-form.component";
 
 @Injectable()
 export class OrderDetailGuard implements CanActivate {
@@ -25,10 +25,10 @@ export class OrderDetailGuard implements CanActivate {
 }
 
 @Injectable()
-export class OrderEditGuard implements CanDeactivate<OrderFormComponent> {
-  canDeactivate(component: OrderFormComponent): boolean {
-    if (component.orderForm.dirty) {
-      let orderName = component.orderForm.get("reference").value || "New Order";
+export class OrderEditGuard implements CanDeactivate<OwnerFormComponent> {
+  canDeactivate(component: OwnerFormComponent): boolean {
+    if (component.ownerForm.dirty) {
+      let orderName = component.ownerForm.get("id").value || "New Order";
       return confirm(`Navigate away and lose all changes to ${orderName}?`);
     }
     return true;

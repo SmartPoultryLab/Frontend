@@ -45,7 +45,7 @@ const routes: Routes = [
   {
     path: "orders",
     loadChildren: () =>
-    import('./pages/order/order.module').then(m => m.OrderModule)
+    import('./pages/owners/owner.module').then(m => m.OrderModule)
     , canActivate: [AuthGuard]
   },
   {

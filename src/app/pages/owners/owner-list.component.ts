@@ -1,7 +1,8 @@
+import { APIService } from 'src/app/_services/api.service';
 import { Component, OnInit, ViewChild } from "@angular/core";
 
-import { IOrder } from "./order";
-import { OrderService } from "./order.service";
+import { IOrder } from "./owner";
+import { OrderService } from "./owner.service";
 import { PagerService } from "../../_services";
 import { ConfirmDialog } from "../../shared";
 import * as _ from "lodash";
@@ -11,33 +12,32 @@ import {MatDialog} from '@angular/material/dialog'
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Owner } from 'src/app/_models/Owner';
 @Component({
   selector: 'order-list',
-  templateUrl: "./order-list.component.html",
-  styleUrls: ["./order-list.component.css"],
+  templateUrl: "./owner-list.component.html",
+  styleUrls: ["./owner-list.component.css"],
   providers: [ConfirmDialog]
 })
 export class OrderListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  pageTitle: string = "Orders";
+  pageTitle: string = "Owners";
 
   showImage: boolean = false;
   listFilter: any = {};
   errorMessage: string;
-  orders: IOrder[];
-  orderList: IOrder[]; //
-  displayedColumns = ["reference", "quantity", "amount", "customerName", "orderDate", "shippedDate", "id"];
+  owners: Owner[];
+  ownerList: Owner[]; //
+  displayedColumns = ["name", "phone", "address", "id"];
   dataSource: any = null; // new MatTableDataSource<Element>(ELEMENT_DATA);
   pager: any = {};
   pagedItems: any[];
   totalAmount: number;
   searchFilter: any = {
-    reference: "",
-    amount: "",
-    quantity: ""
-
+    name: "",
+    phone: "",
   };
   selectedOption: string;
 
@@ -46,7 +46,8 @@ export class OrderListComponent implements OnInit {
   constructor(
     private orderService: OrderService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private api:APIService
   ) { }
 
   toggleImage(): void {
@@ -60,53 +61,48 @@ export class OrderListComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
-  freshDataList(orders: IOrder[]) {
-    this.orders = orders;
-    this.orderList = orders.map(e => {
-      let order = e;
-      e["customerName"] = e.customer.firstname + " " + e.customer.lastname;
-      return order;
-    });
-    this.totalAmount = this.orders.length;
-    this.dataSource = new MatTableDataSource(this.orderList);
+  freshDataList(owners: Owner[]) {
+    this.owners = owners;
+    this.ownerList = owners;
+    this.totalAmount = this.owners.length;
+    this.dataSource = new MatTableDataSource(this.ownerList);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
   ngOnInit(): void {
-    this.orderService.getOrders().subscribe(orders => {
-      this.freshDataList(orders);
-    }, error => (this.errorMessage = <any>error));
-
+     this.api.getOwners().subscribe(Owners => {
+       this.freshDataList(Owners);
+     });
     this.searchFilter = {};
     this.listFilter = {};
   }
 
   getOrders(pageNum?: number) {
-    this.orderService.getOrders().subscribe(orders => {
-      this.freshDataList(orders);
+    this.api.getOwners().subscribe(owners => {
+      this.freshDataList(owners);
 
     }, error => (this.errorMessage = <any>error));
   }
 
   searchOrders(filters: any) {
     if (filters) {
-      this.orderService.getOrders().subscribe(orders => {
-        this.orders = orders;
-        console.log(this.orders.length);
-        this.orders = this.orders.filter((order: IOrder) => {
+      this.api.getOwners().subscribe(owners => {
+        this.owners = owners;
+        console.log(this.owners.length);
+        this.owners = this.owners.filter((owner: Owner) => {
           let match = true;
 
           Object.keys(filters).forEach(k => {
             match =
               match && filters[k]
-                ? order[k]
+                ? owner[k]
                   .toLocaleLowerCase()
                   .indexOf(filters[k].toLocaleLowerCase()) > -1
                 : match;
           })
 
-          this.freshDataList(orders);
+          this.freshDataList(owners);
           return match;
         });
       }, error => (this.errorMessage = <any>error));
@@ -150,8 +146,8 @@ export class OrderListComponent implements OnInit {
       if (this.selectedOption === dialogRef.componentInstance.ACTION_CONFIRM) {
         this.orderService.deleteOrder(id).subscribe(
           () => {
-            this.orderService.getOrders().subscribe(orders => {
-              this.freshDataList(orders);
+            this.api.getOwners().subscribe(owners => {
+              this.freshDataList(owners);
             }, error => (this.errorMessage = <any>error));
             this.openSnackBar("The item has been deleted successfully. ", "Close");
           },

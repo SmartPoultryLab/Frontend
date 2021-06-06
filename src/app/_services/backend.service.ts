@@ -127,13 +127,13 @@ export class BackendService {
     const self = this;
     const headers = self.authService.makeJwtHeaders();
     const url = `${APIConf.baseURL}${endpoint}`;
-    return Observable.fromPromise(new Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
       self.http.post(url, data,{headers}).subscribe(data => {
         resolve(data);
       }, error => {
         reject(error);
       });
-    }));
+    });
   }
 
   doGet(endpoint:string) {

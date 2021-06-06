@@ -1,3 +1,4 @@
+import { APIService } from 'src/app/_services/api.service';
 import {
   Component,
   OnInit,
@@ -22,9 +23,6 @@ import "rxjs/add/observable/merge";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 
-import { IOrder } from "./order";
-import { OrderService } from "./order.service";
-
 import { NumberValidators } from "../../shared/number.validator";
 import { GenericValidator } from "../../shared/generic-validator";
 import { CustomerService, Customer } from "../customer";
@@ -33,10 +31,11 @@ import { ProductDialogComponent } from "./product-dialog.component";
 import { ConfirmDialog } from "../../shared";
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Product } from '../product';
+import { Owner } from 'src/app/_models/Owner';
 
 @Component({
-  selector: 'order-form',
-  templateUrl: "./order-form.component.html",
+  selector: 'owner-form',
+  templateUrl: "./owner-form.component.html",
   styles: [`
   .title-spacer {
       flex: 1 1 auto;
@@ -49,36 +48,29 @@ import { Product } from '../product';
     `],
   providers: [ProductDialogComponent]
 })
-export class OrderFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class OwnerFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(FormControlName, { read: ElementRef })
   formInputElements: ElementRef[];
-  pageTitle: string = "Update Order";
+  pageTitle: string = "Update Owner";
   errorMessage: string;
-  orderForm: FormGroup;
-  order: IOrder = <IOrder>{};
+  ownerForm: FormGroup;
+  owner: Owner = <Owner>{};
   showImage: boolean;
   customers: Customer[];
   fieldColspan = 4;
+  add = false;
   // Use with the generic validation messcustomerId class
   displayMessage: { [key: string]: string } = {};
   private validationMessages: { [key: string]: { [key: string]: string } } = {
-    reference: {
-      required: "Order reference is required.",
-      minlength: "Order reference must be at least one characters.",
-      maxlength: "Order reference cannot exceed 100 characters."
+    name: {
+      required: "Owner name is required.",
     },
-    amount: {
-      required: "Order amount is required.",
-      range:
-        "Amount of the order must be between 1 (lowest) and 9999 (highest)."
+    phone: {
+      required: "Owner phone is required.",
+      pattern: "Owner Phone must be numbers and 11 digit."
     },
-    quantity: {
-      required: "Order quantity is required.",
-      range:
-        "Quantity of the order must be between 1 (lowest) and 20 (highest)."
-    },
-    customerId: {
-      required: "Customer is required."
+    address: {
+      required: "Owner address is required."
     }
   };
   private sub: Subscription;
@@ -90,7 +82,7 @@ export class OrderFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private orderService: OrderService,
+    private api :APIService,
     private customerService: CustomerService,
     public dialog: MatDialog,
     private breakpointObserver: BreakpointObserver
@@ -106,32 +98,16 @@ export class OrderFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.orderForm = this.fb.group({
-      reference: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100)
-        ]
-      ],
-      amount: ["", [Validators.required, NumberValidators.range(1, 99999)]],
-      quantity: ["", [Validators.required, NumberValidators.range(1, 20)]],
-      orderDate: [""],
-      shippedDate: [""],
+    this.ownerForm = this.fb.group({
+      name: ["", [Validators.required]],
+      phone: ["", [Validators.required,Validators.pattern("[0-9 ]{11}")]],
       address: ["", [Validators.required]],
-      city: ["", [Validators.required]],
-      country: ["", [Validators.required]],
-      zipcode: ["", [Validators.required]],
-      customerId: ["", Validators.required],
-      products: this.fb.array([]),
-      membership: false
     });
 
-    // Read the order Id from the route parameter
+    // Read the owner Id from the route parameter
     this.sub = this.route.params.subscribe(params => {
       let id = +params["id"];
-      this.getOrder(id);
+      this.getowner(id);
     });
 
     this.getCustomers();
@@ -149,20 +125,20 @@ export class OrderFormComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     // Merge the blur event observable with the valueChanges observable
-    Observable.merge(this.orderForm.valueChanges, ...controlBlurs)
+    Observable.merge(this.ownerForm.valueChanges, ...controlBlurs)
       .debounceTime(800)
       .subscribe(() => {
         this.displayMessage = this.genericValidator.processMessages(
-          this.orderForm
+          this.ownerForm
         );
       });
   }
 
-  getOrder(id: number): void {
-    this.orderService
-      .getOrder(id)
+  getowner(id: number): void {
+    this.api
+      .getOwnerById(id)
       .subscribe(
-        (order: IOrder) => this.onOrderRetrieved(order),
+        (owner: Owner) => this.onOwnerRetrieved(owner),
         (error: any) => (this.errorMessage = <any>error)
       );
   }
@@ -173,63 +149,48 @@ export class OrderFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }, error => (this.errorMessage = <any>error));
   }
 
-  onOrderRetrieved(order: IOrder): void {
-    if (this.orderForm) {
-      this.orderForm.reset();
+  onOwnerRetrieved(owner: Owner): void {
+    if (this.ownerForm) {
+      this.ownerForm.reset();
     }
-    this.order = order;
+    this.owner = owner;
 
-    if (this.order.id === 0) {
-      this.pageTitle = "Add Order";
+    if (this.owner.id === 0) {
+      this.pageTitle = "Add Owner";
+      this.add = true;
     } else {
-      this.pageTitle = `Update Order: ${this.order.reference} `;
+      this.pageTitle = `Update Owner: ${this.owner.name} `;
     }
 
     // Update the data on the form
-    this.orderForm.patchValue({
-      reference: this.order.reference,
-      amount: this.order.amount,
-      quantity: this.order.products.length,
-      orderDate: new Date(this.order.orderDate),
-      shippedDate: new Date(this.order.shippedDate),
-      address: this.order.shipAddress.address,
-      city: this.order.shipAddress.city,
-      country: this.order.shipAddress.country,
-      zipcode: this.order.shipAddress.zipcode,
-      customerId: this.order.customerId,
-      membership: this.order.membership
+    this.ownerForm.patchValue({
+      name: this.owner.name,
+      number: this.owner.number,
+      address: this.owner.address,
     });
 
-    const products = this.order.products.map(product =>
-      this.fb.group({
-        productName: [product.productName],
-        price: [product.unitPrice]
-      })
-    );
-    const productList = this.fb.array(products);
-    this.orderForm.setControl("products", productList);
   }
 
-  saveOrder(): void {
-    if (this.orderForm.dirty && this.orderForm.valid) {
-      // Copy the form values over the order object values
-      const order = Object.assign({}, this.order, this.orderForm.value);
+  saveowner(): void {
+    if (this.ownerForm.dirty && this.ownerForm.valid) {
+      // Copy the form values over the owner object values
+      const owner = Object.assign({}, this.owner, this.ownerForm.value);
 
-      this.orderService
-        .saveOrder(order)
+      this.api
+        .manageOwner(owner,this.add)
         .subscribe(
           () => this.onSaveComplete(),
           (error: any) => (this.errorMessage = <any>error)
         );
-    } else if (!this.orderForm.dirty && this.orderForm.valid) {
+    } else if (!this.ownerForm.dirty && this.ownerForm.valid) {
       this.onSaveComplete();
     }
   }
 
   onSaveComplete(): void {
     // Reset the form to clear the flags
-    this.orderForm.reset();
-    this.router.navigate(["/orders"]);
+    this.ownerForm.reset();
+    this.router.navigate(["/owners"]);
   }
 
   addProduct(event: any): void {
@@ -245,11 +206,11 @@ export class OrderFormComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       // this.selectedOption = result;
       if (result === dialogRef.componentInstance.ACTION_SAVE) {
-        //     this.orderService.deleteOrder(id).subscribe(
+        //     this.ownerService.deleteowner(id).subscribe(
         //         () => {
-        //             this.orderService.getOrders()
-        //                 .subscribe(orders => {
-        //                     this.orders = orders;
+        //             this.ownerService.getowners()
+        //                 .subscribe(owners => {
+        //                     this.owners = owners;
         //                     this.setPage(1);
         //                 },
         //                 error => this.errorMessage = <any>error);
@@ -276,10 +237,10 @@ export class OrderFormComponent implements OnInit, AfterViewInit, OnDestroy {
       // this.selectedOption = result;
 
       // if (this.selectedOption === dialogRef.componentInstance.ACTION_CONFIRM) {
-      //   this.orderService.deleteOrder(id).subscribe(
+      //   this.ownerService.deleteowner(id).subscribe(
       //     () => {
-      //       this.orderService.getOrders().subscribe(orders => {
-      //         this.freshDataList(orders);
+      //       this.ownerService.getowners().subscribe(owners => {
+      //         this.freshDataList(owners);
       //       }, error => (this.errorMessage = <any>error));
       //       this.openSnackBar("The item has been deleted successfully. ", "Close");
       //     },

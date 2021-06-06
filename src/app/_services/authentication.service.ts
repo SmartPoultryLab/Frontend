@@ -13,9 +13,10 @@ export class AuthenticationService {
 
   login(user: User) {
     return this.apiCall('login', user).map((response: Response) => {
-        this.doAuth(response);
-      });
+      this.doAuth(response);
+    });
   }
+  /**/
   register(userData: User) {
     return this.apiCall('register', userData).map((response: Response) => {
       this.doAuth(response);

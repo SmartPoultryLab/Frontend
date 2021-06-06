@@ -29,33 +29,17 @@
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-table #table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="reference">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Reference No. </mat-header-cell>
-      <mat-cell *matCellDef="let order">
-        <!-- <a [routerLink]="['/order', order.id]"> -->
-        {{order.reference}}
-        <!-- </a> -->
-      </mat-cell>
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+      <mat-cell *matCellDef="let owner"> {{owner.name}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="quantity">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </mat-header-cell>
-      <mat-cell *matCellDef="let order"> {{order.products.length}} </mat-cell>
+    <ng-container matColumnDef="phone">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Phone </mat-header-cell>
+      <mat-cell *matCellDef="let order"> {{order.number}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="amount">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Amount </mat-header-cell>
-      <mat-cell *matCellDef="let order"> {{order.amount}} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="customerName">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Customer </mat-header-cell>
-      <mat-cell *matCellDef="let order"> {{order.customerName}} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="orderDate">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Order Date </mat-header-cell>
-      <mat-cell *matCellDef="let order"> {{order.orderDate | date }} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="shippedDate">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Shipped Date </mat-header-cell>
-      <mat-cell *matCellDef="let order"> {{order.shippedDate | date}} </mat-cell>
+    <ng-container matColumnDef="address">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
+      <mat-cell *matCellDef="let order"> {{order.address}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef style="justify-content:right;">
@@ -92,20 +76,12 @@
   </mat-card>
   <mat-nav-list style="margin-left:20px;">
     <mat-form-field>
-      <input matInput type="text" placeholder="Reference No." name="reference" [(ngModel)]="searchFilter.reference"
+      <input matInput type="text" placeholder="Name" name="reference" [(ngModel)]="searchFilter.name"
         #reference />
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" placeholder="Order Date" name="reference" [(ngModel)]="searchFilter.orderDate"
+      <input matInput type="text" placeholder="Phone" name="reference" [(ngModel)]="searchFilter.phone"
         #reference />
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" placeholder="Customer" name="amount" [(ngModel)]="searchFilter.customerName"
-        #amount />
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" placeholder="Customer Email" name="quantity" [(ngModel)]="searchFilter.customerEmail"
-        #quantity />
     </mat-form-field>
   </mat-nav-list>
   <mat-divider></mat-divider>

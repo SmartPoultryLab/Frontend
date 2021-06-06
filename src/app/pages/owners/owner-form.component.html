@@ -1,0 +1,64 @@
+<form novalidate (ngSubmit)="saveowner()" [formGroup]="ownerForm">
+  <mat-card>
+
+    <mat-toolbar style="background-color: #FFF">
+      <mat-toolbar-row>
+        <span class="view-card-title"> {{pageTitle}}</span>
+        <span class="title-spacer"></span>
+        <mat-card-actions>
+          <button mat-mini-fab class="primary" style="margin-right:10px; background-color:darkgray" type="submit"
+            [disabled]='!ownerForm.valid'>
+            <mat-icon>save</mat-icon>
+          </button>
+          <button mat-mini-fab class="" style="margin-right:10px; " [routerLink]="['/orders']">
+            <mat-icon>cancel</mat-icon>
+          </button>
+          <button mat-mini-fab class="accent" style="margin-right:10px; background-color:#e07c9e"
+            (click)="addProduct($event)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-card-content style="margin: 5 0 5 0px;">
+      <div class="form-card">
+        <mat-grid-list cols="12" rowHeight="80px">
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <input matInput id="name" type="text" placeholder="Name"
+                formControlName="name" />
+              <mat-error *ngIf="displayMessage.name">
+                {{displayMessage.name}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <input matInput placeholder="Phone" id="phone" type="text"  formControlName="phone" />
+              <mat-error *ngIf="displayMessage.phone">
+                {{displayMessage.phone}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <input matInput placeholder="Address" id="address" type="text" formControlName="address" disabled />
+              <mat-error class="help-block" *ngIf="displayMessage.address">
+                {{displayMessage.address}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+
+        </mat-grid-list>
+      </div>
+
+      <!-- product list -->
+
+
+      <div class='has-error' *ngIf='errorMessage'>{{errorMessage}}</div>
+    </mat-card-content>
+    <!-- </div> -->
+  </mat-card>
+</form>
