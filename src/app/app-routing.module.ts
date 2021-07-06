@@ -37,21 +37,21 @@ const routes: Routes = [
     , canActivate: [AuthGuard]
   },
   {
-    path: "customers",
+    path: "farms",
     loadChildren: () =>
-    import('./pages/customer/customer.module').then(m => m.CustomerModule)
+    import('./pages/farm/farm.module').then(m => m.FarmModule)
     , canActivate: [AuthGuard]
   },
   {
-    path: "orders",
+    path: "owners",
     loadChildren: () =>
     import('./pages/owners/owner.module').then(m => m.OrderModule)
     , canActivate: [AuthGuard]
   },
   {
-    path: "products",
+    path: "inspections",
     loadChildren: () =>
-    import('./pages/product/product.module').then(m => m.ProductModule)
+    import('./pages/inspection/inspection.module').then(m => m.InspectionModule)
     , canActivate: [AuthGuard]
   },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

@@ -8,7 +8,7 @@
   </mat-card-header>
   <mat-toolbar class="primary">
     <mat-toolbar-row>
-      <button mat-mini-fab style="margin-right:10px; background-color:#e07c9e" [routerLink]="['/customers/edit/', 0]">
+      <button mat-mini-fab style="margin-right:10px; background-color:#e07c9e" [routerLink]="['/farms/edit/', 0]">
         <mat-icon>add</mat-icon>
       </button>
       <button mat-mini-fab style="margin-right:10px; background-color:#a28b6e" (click)="sidenav.toggle()">
@@ -29,41 +29,37 @@
   </mat-toolbar>
 
   <mat-table #table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="avatar">
-      <mat-header-cell *matHeaderCellDef></mat-header-cell>
-      <mat-cell *matCellDef="let customer">
-        <!-- <a [routerLink]="['/customer', customer.id]"> -->
-        <img *ngIf='customer.avatar' [src]='customer.avatar' [title]='customer.firstname | uppercase'
-          [style.width.px]='imageWidth' [style.margin.px]='imageMargin'>
-        <!-- </a> -->
-      </mat-cell>
+    <ng-container matColumnDef="owner_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Owner Name </mat-header-cell>
+      <mat-cell *matCellDef="let farm"> {{farm.owner_name}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="firstname">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> First Name </mat-header-cell>
-      <mat-cell *matCellDef="let customer"> {{customer.firstname}} </mat-cell>
+    <ng-container matColumnDef="bird_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Bird Type </mat-header-cell>
+      <mat-cell *matCellDef="let farm"> {{farm.bird_name}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="lastname">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </mat-header-cell>
-      <mat-cell *matCellDef="let customer"> {{customer.lastname}} </mat-cell>
+    <ng-container matColumnDef="breed_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Breed Name </mat-header-cell>
+      <mat-cell *matCellDef="let farm"> {{farm.breed_name}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="email">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
-      <mat-cell *matCellDef="let customer"> {{customer.email}} </mat-cell>
+    <ng-container matColumnDef="housing_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Housing Type </mat-header-cell>
+      <mat-cell *matCellDef="let farm"> {{farm.housing_name }} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="rewards">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Rewards </mat-header-cell>
-      <mat-cell *matCellDef="let customer"> {{customer.rewards | number }} </mat-cell>
+    <ng-container matColumnDef="food_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Food Type </mat-header-cell>
+      <mat-cell *matCellDef="let farm"> {{farm.food_name }} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="membership">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Membershiop</mat-header-cell>
-      <mat-cell *matCellDef="let customer">
-        <span *ngIf="!customer.membership" style="color:green">
-          <mat-icon>check_circle</mat-icon>
-        </span>
-        <span *ngIf="customer.membership" style="color:darkgrey">
-          <mat-icon>highlight_off</mat-icon>
-        </span>
-      </mat-cell>
+    <ng-container matColumnDef="farm_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Farm Name </mat-header-cell>
+      <mat-cell *matCellDef="let farm"> {{farm.farm_name}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="num_of_breeds">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Number Of Birds </mat-header-cell>
+      <mat-cell *matCellDef="let farm"> {{farm.num_of_breeds | number }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="start_date">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </mat-header-cell>
+      <mat-cell *matCellDef="let farm"> {{getDate(farm.start_date) | date:'MM/dd/yyyy' }} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef style="justify-content:right;">
@@ -71,7 +67,7 @@
       </mat-header-cell>
       <mat-cell *matCellDef="let customer" style="justify-content:right;">
         <button mat-mini-fab style="background-color:teal; min-height: 30px;   margin: 5px;"
-          [routerLink]="['/customers/edit/', customer.id]">
+          [routerLink]="['/farms/edit/', customer.id]">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-mini-fab style="background-color:lightblue; min-height: 30px;  margin: 5px;"
@@ -100,18 +96,13 @@
   </mat-card>
   <mat-nav-list style="margin-left:50px;">
     <mat-form-field appearance="standard">
-      <mat-label>First Name</mat-label>
-      <input matInput appearance="standard" placeholder="First Name" name="firstname"
-        [(ngModel)]="searchFilter.firstname" />
+      <mat-label>Owner Name</mat-label>
+      <input matInput appearance="standard" placeholder="Owner Name" name="owner_name"
+        [(ngModel)]="searchFilter.owner_name" />
     </mat-form-field>
     <mat-form-field appearance="standard">
-      <mat-label>Last Name</mat-label>
-      <input matInput placeholder="Last Name" name="reference" [(ngModel)]="searchFilter.customerDate" #reference />
-    </mat-form-field>
-    <mat-form-field appearance="standard">
-      <mat-label>Mobile</mat-label>
-      <input matInput appearance="standard" placeholder="Mobile" name="amount" [(ngModel)]="searchFilter.customerName"
-        #amount />
+      <mat-label>Farm Name</mat-label>
+      <input matInput placeholder="Farm Name" name="farm_name" [(ngModel)]="searchFilter.farm_name" #reference />
     </mat-form-field>
 
   </mat-nav-list>
@@ -119,7 +110,7 @@
   <mat-card-header>
     <mat-action-list>
       <button mat-raised-button style="color:lightgrey; background-color:darkgreen; margin:5px;"
-        (click)="searchCustomers(searchFilter);sidenav.toggle()">
+        (click)="searchFarms(searchFilter);sidenav.toggle()">
         <mat-icon>search</mat-icon>Search
       </button>
       <button mat-raised-button style="color:lightgrey; background-color:darkred;margin:5px;"

@@ -1,53 +1,54 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { Product } from './product';
-import { ProductService } from './product.service';
+import { Farm } from './farm';
+import { FarmService } from './farm.service';
 import { PagerService } from '../../_services';
 import { ConfirmDialog } from '../../shared';
 import * as _ from 'lodash';
+
+import {MatDialog} from '@angular/material/dialog'
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 
 
 @Component({
-    selector: 'product-list',
-    templateUrl: './product-list.component.html',
-    styleUrls: ['./product-list.component.css'],
+    selector: 'customer-list',
+    templateUrl: './farm-list.component.html',
+    styleUrls: ['./farm-list.component.css'],
     providers: [ConfirmDialog]
 })
-export class ProductListComponent implements OnInit {
+export class FarmListComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    pageTitle: string = 'Products';
 
+    pageTitle: string = 'Farms';
+    imageWidth: number = 30;
+    imageMargin: number = 2;
     showImage: boolean = false;
     listFilter: any = {};
     errorMessage: string;
 
-    products: Product[];
-    productList: Product[];
-
-    displayedColumns = ["productName", "unitPrice", "unitInStock", "categoryName", "id"];
+    farms: Farm[];
+    farmsList: Farm[]; //
+    displayedColumns = ["owner_name", "bird_name", "breed_name", "housing_name", "food_name", "farm_name", "num_of_breeds", "start_date","id"];
     dataSource: any = null;
     pager: any = {};
     pagedItems: any[];
-    searchFilter: any = {};
+    searchFilter: any = {
+      owner_name: "",
+      farm_name: "",
+    };
     selectedOption: string;
 
 
-
     constructor(
-        private productService: ProductService,
+        private farmService: FarmService,
         // private pagerService: PagerService,
-        public dialog: MatDialog, public snackBar: MatSnackBar) {
-    }
-
-    toggleImage(): void {
-        this.showImage = !this.showImage;
+        public dialog: MatDialog,
+        public snackBar: MatSnackBar) {
     }
 
     applyFilter(filterValue: string) {
@@ -56,25 +57,18 @@ export class ProductListComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    freshDataList(products: Product[]) {
-        this.products = products;
-
-        this.productList = products.map(e => {
-            const product = e;
-            e["categoryName"] = e["category"]["categoryName"];
-            return product;
-        });
-
-        this.dataSource = new MatTableDataSource(this.products);
+    freshDataList(farms: Farm[]) {
+        this.farms = farms;
+        this.dataSource = new MatTableDataSource(this.farms);
+        console.log(this.dataSource)
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
 
-
     ngOnInit(): void {
-        this.productService.getProducts()
-            .subscribe(products => {
-                this.freshDataList(products);
+        this.farmService.getFarms()
+            .subscribe(farms => {
+                this.freshDataList(farms);
             },
             error => this.errorMessage = <any>error);
 
@@ -82,30 +76,33 @@ export class ProductListComponent implements OnInit {
         this.listFilter = {};
     }
 
-    getProducts(pageNum?: number) {
-        this.productService.getProducts()
-            .subscribe(products => {
-                this.freshDataList(products);
+    getFarms(pageNum?: number) {
+        this.farmService.getFarms()
+            .subscribe(customers => {
+                this.freshDataList(customers);
             },
             error => this.errorMessage = <any>error);
     }
 
-    searchProducts(filters: any) {
+    getDate(date:string):Date{
+      return new Date(date);
+    }
+    searchFarms(filters: any) {
         if (filters) {
-            this.productService.getProducts()
-                .subscribe(products => {
-                    this.products = products;
-                    console.log(this.products.length)
-                    this.products = this.products.filter((product: Product) => {
+            this.farmService.getFarms()
+                .subscribe(farms => {
+                    this.farms = farms;
+                    console.log(this.farms.length)
+                    this.farms = this.farms.filter((farm: Farm) => {
                         let match = true;
 
                         Object.keys(filters).forEach((k) => {
                             match = match && filters[k] ?
-                                product[k] && product[k].toLocaleLowerCase().indexOf(filters[k].toLocaleLowerCase()) > -1 : match;
+                              farm[k].toLocaleLowerCase().indexOf(filters[k].toLocaleLowerCase()) > -1 : match;
                         })
                         return match;
                     });
-                    this.freshDataList(products);
+                    this.freshDataList(farms);
                 },
                 error => this.errorMessage = <any>error);
         }
@@ -114,19 +111,20 @@ export class ProductListComponent implements OnInit {
 
     resetListFilter() {
         this.listFilter = {};
-        this.getProducts();
+        this.getFarms();
     }
 
     reset() {
         this.listFilter = {};
         this.searchFilter = {};
-        this.getProducts();
+        this.getFarms();
+
     }
 
     resetSearchFilter(searchPanel: any) {
         searchPanel.toggle();
         this.searchFilter = {};
-        this.getProducts();
+        this.getFarms();
     }
 
     openSnackBar(message: string, action: string) {
@@ -145,11 +143,11 @@ export class ProductListComponent implements OnInit {
             this.selectedOption = result;
 
             if (this.selectedOption === dialogRef.componentInstance.ACTION_CONFIRM) {
-                this.productService.deleteProduct(id).subscribe(
+                this.farmService.deleteFarm(id).subscribe(
                     () => {
-                        this.productService.getProducts()
-                            .subscribe(products => {
-                                this.freshDataList(products);
+                        this.farmService.getFarms()
+                            .subscribe(farms => {
+                                this.freshDataList(farms);
                             },
                             error => this.errorMessage = <any>error);
                         this.openSnackBar("The item has been deleted successfully. ", "Close");
@@ -163,4 +161,7 @@ export class ProductListComponent implements OnInit {
             }
         });
     }
+
+
+
 }

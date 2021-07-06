@@ -135,12 +135,36 @@ export class BackendService {
       });
     });
   }
-
+  doPatch(endpoint:string,data: any) {
+    const self = this;
+    const headers = self.authService.makeJwtHeaders();
+    const url = `${APIConf.baseURL}${endpoint}`;
+    return new Promise(function (resolve, reject) {
+      self.http.patch(url, data,{headers}).subscribe(data => {
+        resolve(data);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
   doGet(endpoint:string) {
     const self = this;
     const url = `${APIConf.baseURL}${endpoint}`;
     return new Promise(function (resolve, reject) {
       self.http.get<Response>(url).subscribe(data => {
+        resolve(data);
+      }, error => {
+        reject(error);
+
+      });
+    });
+  }
+
+  doDelete(endpoint:string) {
+    const self = this;
+    const url = `${APIConf.baseURL}${endpoint}`;
+    return new Promise(function (resolve, reject) {
+      self.http.delete<Response>(url).subscribe(data => {
         resolve(data);
       }, error => {
         reject(error);

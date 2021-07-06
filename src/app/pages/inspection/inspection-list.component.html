@@ -6,9 +6,34 @@
       <h1>{{pageTitle }}</h1>
     </mat-card-title>
   </mat-card-header>
+    <div class="ins-slectors">
+        <mat-form-field  class="form-field" appearance="outline">
+          <mat-label>Farm Owner</mat-label>
+          <mat-select placeholder="Select Farm Owner" (selectionChange)="loadOwnerFarms($event.value)">
+            <mat-option *ngFor="let owner of ownersList" [value]="owner.id">
+              {{owner.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      <div class="farm-selector">
+        <mat-form-field  class="form-field" appearance="outline">
+          <mat-label>Farm Name</mat-label>
+          <mat-select placeholder="Select Farm" (selectionChange)="loadFarmInspections($event.value)" #farm_id>
+            <mat-option *ngFor="let farm of farmsListFilterd" [value]="farm.id">
+              {{farm.farm_name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div *ngIf="farmsList.length === 0" class="no-data">No data</div>
+      </div>
+      </div>
+
   <mat-toolbar>
     <mat-toolbar-row>
-      <button mat-mini-fab style="margin-right:10px; background-color:#e07c9e" [routerLink]="['/products/edit', 0]">
+
+
+
+      <button mat-mini-fab style="margin-right:10px; background-color:#e07c9e" (click)="manage(0,farm_id.value)">
         <mat-icon>add</mat-icon>
       </button>
       <button mat-mini-fab style="margin-right:10px; background-color:#a28b6e" (click)="sidenav.toggle()">
@@ -28,38 +53,38 @@
   </mat-toolbar>
 
   <mat-table #table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="productName">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </mat-header-cell>
-      <mat-cell *matCellDef="let product">
-        <!-- <a [routerLink]="['/product', product.id]"> -->
-        {{product.productName}}
-        <!-- </a> -->
+    <ng-container matColumnDef="inspection_date">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Inspection date </mat-header-cell>
+      <mat-cell *matCellDef="let inspection">
+        {{getDate(inspection.inspection_date) | date:'MM/dd/yyyy' }}
       </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="unitPrice">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Price </mat-header-cell>
-      <mat-cell *matCellDef="let product"> {{ product.unitPrice | currency:'AUD'}} </mat-cell>
+
+    <ng-container matColumnDef="current_age">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Age </mat-header-cell>
+      <mat-cell *matCellDef="let inspection"> {{ inspection.current_age.value }} {{ inspection.current_age.unit.name }}</mat-cell>
     </ng-container>
-    <ng-container matColumnDef="unitInStock">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Quantity In Stock </mat-header-cell>
-      <mat-cell *matCellDef="let product"> {{ product.unitInStock | number: '0.0-0' }} </mat-cell>
+
+    <ng-container matColumnDef="dead_last_3_days">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Dead Birds Record </mat-header-cell>
+      <mat-cell *matCellDef="let inspection"> {{ inspection.dead_last_3_days }} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="categoryName">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Category </mat-header-cell>
-      <mat-cell *matCellDef="let product"> {{product.category.categoryName}}</mat-cell>
+
+    <ng-container matColumnDef="average_weight">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Average Weight </mat-header-cell>
+      <mat-cell *matCellDef="let inspection"> {{ inspection.average_weight.value }} {{ inspection.average_weight.unit.name }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef style="justify-content:right;">
         <!-- <button mat-button style="color:white; background-color:darkgrey" (click)="resetListFilter()">Reset</button> -->
       </mat-header-cell>
-      <mat-cell *matCellDef="let product" style="justify-content:right;">
-        <button mat-mini-fab style="background-color:teal; min-height: 30px;   margin: 5px;"
-          [routerLink]="['/products/edit', product.id]">
+      <mat-cell *matCellDef="let inspection" style="justify-content:right;">
+        <button mat-mini-fab style="background-color:teal; min-height: 30px;   margin: 5px;" (click)="manage(inspection.id,inspection.farm_id)">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-mini-fab style="background-color:lightblue; min-height: 30px;  margin: 5px;"
-          (click)="openDialog(product.id)">
+          (click)="openDialog(inspection.id)">
           <mat-icon>delete</mat-icon>
         </button>
       </mat-cell>
@@ -85,16 +110,12 @@
   </mat-card>
   <mat-nav-list style="margin-left:20px;">
     <mat-form-field>
-      <input matInput type="text" placeholder="Product Name" style="width:200px;" name="product"
-        [(ngModel)]="searchFilter.productName" #product />
+      <input matInput type="text" placeholder="Inspection Date" style="width:200px;" name="inspection_date"
+        [(ngModel)]="searchFilter.inspection_date" #inspection_date />
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" placeholder="Price" style="width:200px;" name="price" [(ngModel)]="searchFilter.price"
-        #price />
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" placeholder="Qunantity" style="width:200px;" name="quantity"
-        [(ngModel)]="searchFilter.quantity" #price />
+      <input matInput type="text" placeholder="Age" style="width:200px;" name="current_age" [(ngModel)]="searchFilter.current_age"
+        #current_age />
     </mat-form-field>
 
   </mat-nav-list>
@@ -103,7 +124,7 @@
   <mat-card-header>
     <mat-action-list>
       <button mat-raised-button style="color:lightgrey; background-color:darkgreen; margin:5px;"
-        (click)="searchProducts(searchFilter);sidenav.toggle()">
+        (click)="searchInspections(searchFilter);sidenav.toggle()">
         <mat-icon>search</mat-icon>Search
       </button>
       <button mat-raised-button style="color:lightgrey; background-color:darkred;margin:5px;"

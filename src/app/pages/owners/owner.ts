@@ -1,6 +1,6 @@
 /* Defines the order entity */
-import { Customer } from "../customer";
-import { Product } from "../product";
+import { Farm } from "../farm";
+import { Inspection } from "../inspection";
 
 export interface IOrder {
   reference: string;
@@ -12,8 +12,8 @@ export interface IOrder {
   membership: boolean;
   orderDate: any;
   shippedDate: any;
-  customer: Customer;
-  products: Array<Product>;
+  customer: Farm;
+  products: Array<Inspection>;
   shipAddress: IAddress;
 }
 

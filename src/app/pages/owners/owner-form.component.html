@@ -10,7 +10,7 @@
             [disabled]='!ownerForm.valid'>
             <mat-icon>save</mat-icon>
           </button>
-          <button mat-mini-fab class="" style="margin-right:10px; " [routerLink]="['/orders']">
+          <button mat-mini-fab class="" style="margin-right:10px; " [routerLink]="['/owners']">
             <mat-icon>cancel</mat-icon>
           </button>
           <button mat-mini-fab class="accent" style="margin-right:10px; background-color:#e07c9e"
@@ -35,9 +35,9 @@
           </mat-grid-tile>
           <mat-grid-tile [colspan]="fieldColspan">
             <mat-form-field class="form-field" appearance="outline">
-              <input matInput placeholder="Phone" id="phone" type="text"  formControlName="phone" />
-              <mat-error *ngIf="displayMessage.phone">
-                {{displayMessage.phone}}
+              <input matInput placeholder="Phone" id="number" type="text"  formControlName="number" />
+              <mat-error *ngIf="displayMessage.number">
+                {{displayMessage.number}}
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
@@ -54,7 +54,7 @@
         </mat-grid-list>
       </div>
 
-      <!-- product list -->
+      <!-- inspection list -->
 
 
       <div class='has-error' *ngIf='errorMessage'>{{errorMessage}}</div>

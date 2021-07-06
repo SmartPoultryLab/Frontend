@@ -1,0 +1,150 @@
+<form novalidate (ngSubmit)="saveFarm()" [formGroup]="farmForm">
+  <mat-card>
+
+    <mat-toolbar style="background-color: #FFF">
+      <mat-toolbar-row>
+        <span class="view-card-title"> {{pageTitle}}</span>
+        <span class="title-spacer"></span>
+        <mat-card-actions>
+          <button mat-mini-fab class="primary" style="margin-right:10px; background-color:darkgray" type="submit"
+            [disabled]='!farmForm.valid'>
+            <mat-icon>save</mat-icon>
+          </button>
+          <button mat-mini-fab class="" style="margin-right:10px; " [routerLink]="['/farms']">
+            <mat-icon>cancel</mat-icon>
+          </button>
+
+        </mat-card-actions>
+
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-card-content style="margin: 5px 0 5px 10px;">
+
+      <div class="form-card">
+        <mat-grid-list cols="12" rowHeight="80px">
+          <mat-grid-tile [colspan]="fieldColspan">
+            <!-- colspan="4"> -->
+
+            <mat-form-field  class="form-field" appearance="outline">
+              <mat-label>Farm Owner</mat-label>
+              <mat-select id="owner_id" formControlName="owner_id">
+                <mat-option *ngFor="let owner of ownersList" [value]="owner.id">
+                  {{owner.name}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="displayMessage.owner_id">
+                {{displayMessage.owner_id}}
+              </mat-error>
+            </mat-form-field>
+
+
+
+          </mat-grid-tile>
+
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Bird Type</mat-label>
+              <mat-select id="bird_id" formControlName="bird_id">
+                <mat-option *ngFor="let bird of farmOptions.birds" [value]="bird.id">
+                  {{bird.bird_name}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="displayMessage.bird_id">
+                {{displayMessage.bird_id}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field  class="form-field" appearance="outline">
+              <mat-label>Breed Name</mat-label>
+              <mat-select id="breed_id" formControlName="breed_id">
+                <mat-option *ngFor="let breed of farmOptions.breeds" [value]="breed.id">
+                  {{breed.breed_name}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="displayMessage.breed_id">
+                {{displayMessage.breed_id}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field  class="form-field" appearance="outline">
+              <mat-label>Housing Type</mat-label>
+              <mat-select id="housing_id" formControlName="housing_id">
+                <mat-option *ngFor="let housing of farmOptions.housings" [value]="housing.id">
+                  {{housing.housingName}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="displayMessage.housing_id">
+                {{displayMessage.housing_id}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Farm Name</mat-label>
+              <input matInput id="farm_name" type="text" placeholder="Farm Name (required)"
+                     formControlName="farm_name" />
+              <mat-error *ngIf="displayMessage.farm_name">
+                {{displayMessage.farm_name}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field  class="form-field" appearance="outline">
+              <mat-label>Food Type</mat-label>
+              <mat-select id="food_id" formControlName="food_id">
+
+                <mat-option *ngFor="let food of farmOptions.foods" [value]="food.id">
+                  {{food.food_name}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="displayMessage.food_id">
+                {{displayMessage.food_id}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Number Of Birds</mat-label>
+              <input matInput id="num_of_breeds" type="text" placeholder="Number Of Birds (required)"
+                     formControlName="num_of_breeds" />
+              <mat-error *ngIf="displayMessage.num_of_breeds">
+                {{displayMessage.num_of_breeds}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Start Date</mat-label>
+              <input matInput [matDatepicker]="picker" matInput id="start_date" type="text" placeholder="Start Date (required)"
+                     formControlName="start_date">
+              <mat-datepicker-toggle matSuffix [for]="picker">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="displayMessage.start_date">
+                {{displayMessage.start_date}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+
+        </mat-grid-list>
+
+      </div>
+
+
+    </mat-card-content>
+
+  </mat-card>
+</form>

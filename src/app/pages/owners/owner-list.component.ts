@@ -144,7 +144,7 @@ export class OrderListComponent implements OnInit {
       this.selectedOption = result;
 
       if (this.selectedOption === dialogRef.componentInstance.ACTION_CONFIRM) {
-        this.orderService.deleteOrder(id).subscribe(
+        this.api.deleteOwner(id).subscribe(
           () => {
             this.api.getOwners().subscribe(owners => {
               this.freshDataList(owners);

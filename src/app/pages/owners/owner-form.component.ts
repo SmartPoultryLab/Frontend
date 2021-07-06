@@ -25,12 +25,12 @@ import { Subscription } from "rxjs/Subscription";
 
 import { NumberValidators } from "../../shared/number.validator";
 import { GenericValidator } from "../../shared/generic-validator";
-import { CustomerService, Customer } from "../customer";
+import { FarmService, Farm } from "../farm";
 import { MatDialog } from '@angular/material/dialog';
 import { ProductDialogComponent } from "./product-dialog.component";
 import { ConfirmDialog } from "../../shared";
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Product } from '../product';
+import { Inspection } from '../inspection';
 import { Owner } from 'src/app/_models/Owner';
 
 @Component({
@@ -51,21 +51,21 @@ import { Owner } from 'src/app/_models/Owner';
 export class OwnerFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(FormControlName, { read: ElementRef })
   formInputElements: ElementRef[];
-  pageTitle: string = "Update Owner";
+  pageTitle: string = "Add Owner";
   errorMessage: string;
   ownerForm: FormGroup;
   owner: Owner = <Owner>{};
   showImage: boolean;
-  customers: Customer[];
+  farms: Farm[];
   fieldColspan = 4;
-  add = false;
+  add = true;
   // Use with the generic validation messcustomerId class
   displayMessage: { [key: string]: string } = {};
   private validationMessages: { [key: string]: { [key: string]: string } } = {
     name: {
       required: "Owner name is required.",
     },
-    phone: {
+    number: {
       required: "Owner phone is required.",
       pattern: "Owner Phone must be numbers and 11 digit."
     },
@@ -83,7 +83,7 @@ export class OwnerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private api :APIService,
-    private customerService: CustomerService,
+    private farmService: FarmService,
     public dialog: MatDialog,
     private breakpointObserver: BreakpointObserver
   ) {
@@ -100,7 +100,7 @@ export class OwnerFormComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.ownerForm = this.fb.group({
       name: ["", [Validators.required]],
-      phone: ["", [Validators.required,Validators.pattern("[0-9 ]{11}")]],
+      number: ["", [Validators.required,Validators.pattern("[0-9 ]{11}")]],
       address: ["", [Validators.required]],
     });
 
@@ -109,8 +109,6 @@ export class OwnerFormComponent implements OnInit, AfterViewInit, OnDestroy {
       let id = +params["id"];
       this.getowner(id);
     });
-
-    this.getCustomers();
   }
 
   ngOnDestroy(): void {
@@ -135,6 +133,7 @@ export class OwnerFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getowner(id: number): void {
+    if (id != 0)
     this.api
       .getOwnerById(id)
       .subscribe(
@@ -143,31 +142,25 @@ export class OwnerFormComponent implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
-  getCustomers() {
-    this.customerService.getCustomers().subscribe(customers => {
-      this.customers = customers;
-    }, error => (this.errorMessage = <any>error));
-  }
-
   onOwnerRetrieved(owner: Owner): void {
     if (this.ownerForm) {
       this.ownerForm.reset();
     }
-    this.owner = owner;
+    if (owner){
+      console.log('here')
+      this.add = false;
+      this.owner = owner;
+        this.pageTitle = `Update Owner: ${this.owner.name} `;
 
-    if (this.owner.id === 0) {
+      this.ownerForm.patchValue({
+        name: this.owner.name,
+        number: this.owner.number,
+        address: this.owner.address,
+      });
+    } else {
       this.pageTitle = "Add Owner";
       this.add = true;
-    } else {
-      this.pageTitle = `Update Owner: ${this.owner.name} `;
     }
-
-    // Update the data on the form
-    this.ownerForm.patchValue({
-      name: this.owner.name,
-      number: this.owner.number,
-      address: this.owner.address,
-    });
 
   }
 
@@ -227,7 +220,7 @@ export class OwnerFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  openDialog(product: Product) {
+  openDialog(product: Inspection) {
     let dialogRef = this.dialog.open(ConfirmDialog, {
       data: { title: "Dialog", message: "Are you sure to delete this item?" }
     });

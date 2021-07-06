@@ -1,0 +1,27 @@
+thead {
+  color: #337AB7;
+}
+
+
+.title-spacer {
+  flex: 1 1 auto;
+}
+
+.search-form-fileld {
+  margin-right: 20px;
+}
+.ins-slectors{
+  display: flex;
+  flex-direction: row;
+}
+.ins-slectors .form-field{
+  width:250px;
+  margin-right:10px;
+}
+.no-data{
+  margin-top: -20px;
+  margin-left:10px;
+  color:red;
+  font-size: 12px;
+}
+

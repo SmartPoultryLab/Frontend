@@ -8,9 +8,9 @@ import { ProductDialogComponent } from "./product-dialog.component";
 
 import { OrderService } from "./owner.service";
 import { SharedModule } from "../../shared/shared.module";
-import { MaterialModule } from "../../shared/material.module";
-import { CustomerService } from '../customer';
-import { ProductService } from '../product';
+import { MaterialModule } from "../../shared";
+import { FarmService } from '../farm';
+import { InspectionService } from '../inspection';
 @NgModule({
   imports: [
     SharedModule,
@@ -33,8 +33,8 @@ import { ProductService } from '../product';
     OrderService,
     OrderDetailGuard,
     OrderEditGuard,
-    CustomerService,
-    ProductService
+    FarmService,
+    InspectionService
   ],
   exports: [
     OrderListComponent,

@@ -1,0 +1,194 @@
+<!-- <div class="panel panel-primary">
+    <div class="panel-heading">
+        {{pageTitle}}
+    </div>
+
+    <div class="panel-body">         -->
+<form novalidate (ngSubmit)="saveInspection()" [formGroup]="inspectionForm">
+  <mat-card>
+    <!--   <mat-card-header>
+     <mat-card-title class="view-card-title">
+      <h1>{{pageTitle }}</h1>
+    </mat-card-title>
+     </mat-card-header>   -->
+
+    <mat-toolbar style="background-color: #FFF">
+      <mat-toolbar-row>
+        <span class="view-card-title"> {{pageTitle}}</span>
+        <span class="title-spacer"></span>
+
+        <mat-card-actions>
+          <button mat-mini-fab class="primary" style="margin-right:10px; background-color:darkgray" type="submit"
+            [disabled]='!inspectionForm.valid'>
+            <mat-icon>save</mat-icon>
+          </button>
+          <button mat-mini-fab class="" style="margin-right:10px; " [routerLink]="['/inspections']">
+            <mat-icon>cancel</mat-icon>
+          </button>
+
+        </mat-card-actions>
+
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div class="farm-info">
+      <div class="info-text">Farm Name : <span>{{this.farm_data.farm_name}}</span></div>
+      <div class="info-text">NO. Visits :  <span>{{this.farm_data.num_of_visits}} </span></div>
+      <div class="info-text">Farm Startup Date :  <span>{{getDate(this.farm_data.start_date) | date:'yyyy/MM/dd'}} </span></div>
+    </div>
+    <mat-card-content style="margin: 5 0 5 0px;">
+      <div class="form-card">
+        <mat-grid-list cols="12" rowHeight="80px">
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Inspection Date</mat-label>
+              <input matInput [matDatepicker]="picker" id="inspection_date" type="text" placeholder="Inspection Date (required)"
+                     formControlName="inspection_date">
+              <mat-datepicker-toggle matSuffix [for]="picker">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="displayMessage.inspection_date">
+                {{displayMessage.inspection_date}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Dead Birds Last 3 Days</mat-label>
+              <input matInput id="dead_last_3_days" type="text" placeholder="Dead Birds Last 3 Days (required)"
+                formControlName="dead_last_3_days" />
+              <mat-error *ngIf="displayMessage.dead_last_3_days">
+                {{displayMessage.dead_last_3_days}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Feed Consumption</mat-label>
+              <input matInput id="feed_consumption" type="text" placeholder="Feed Consumption (required)"
+                     formControlName="feed_consumption" />
+              <mat-error *ngIf="displayMessage.feed_consumption">
+                {{displayMessage.feed_consumption}}
+              </mat-error>
+
+              <mat-select formControlName="feed_unit" id="feed_unit" style="width:40%">
+                <mat-option *ngFor="let unit of Units.mass" [value]="unit">
+                  {{unit.name}}
+                </mat-option>
+              </mat-select>
+
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Current Age</mat-label>
+              <input matInput id="current_age" type="text" placeholder="Current Age (required)"
+                     formControlName="current_age" />
+              <mat-error *ngIf="displayMessage.current_age">
+                {{displayMessage.current_age}}
+              </mat-error>
+
+              <mat-select formControlName="age_unit" id="age_unit" style="width:40%">
+                <mat-option *ngFor="let unit of Units.age" [value]="unit">
+                  {{unit.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline" >
+              <mat-label>Water Consumption</mat-label>
+              <input matInput id="water_consumption" type="text" placeholder="Water Consumption (required)" formControlName="water_consumption" />
+              <mat-select formControlName="water_unit" id="water_unit" style="width:40%" >
+                <mat-option *ngFor="let unit of Units.water" [value]="unit">
+                  {{unit.name}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="displayMessage.water_consumption">
+                {{displayMessage.water_consumption}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Average Weight</mat-label>
+              <input matInput id="average_weight" type="text" placeholder="Average Weight (required)"
+                     formControlName="average_weight" />
+              <mat-error *ngIf="displayMessage.average_weight">
+                {{displayMessage.average_weight}}
+              </mat-error>
+
+              <mat-select formControlName="weight_unit" id="weight_unit" style="width:40%">
+                <mat-option *ngFor="let unit of Units.mass" [value]="unit">
+                  {{unit.name}}
+                </mat-option>
+              </mat-select>
+
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Clinical Signs</mat-label>
+              <input matInput id="clinical_signs" type="text" placeholder="Clinical Signs (required)"
+                     formControlName="clinical_signs" />
+              <mat-error *ngIf="displayMessage.clinical_signs">
+                {{displayMessage.clinical_signs}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>PM Lesions</mat-label>
+              <input matInput id="pm_lesions" type="text" placeholder="PM Lesions (required)"
+                     formControlName="pm_lesions" />
+              <mat-error *ngIf="displayMessage.pm_lesions">
+                {{displayMessage.pm_lesions}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Diagnoses</mat-label>
+              <input matInput id="diagnoses" type="text" placeholder="Diagnoses (required)"
+                     formControlName="diagnoses" />
+              <mat-error *ngIf="displayMessage.diagnoses">
+                {{displayMessage.diagnoses}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Other Notes</mat-label>
+              <input matInput id="other_notes" type="text" placeholder="Other Notes"
+                     formControlName="other_notes" />
+              <mat-error *ngIf="displayMessage.other_notes">
+                {{displayMessage.other_notes}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+        </mat-grid-list>
+    </div>
+
+      <div class='has-error' *ngIf='errorMessage'>{{errorMessage}}</div>
+    </mat-card-content>
+
+
+
+  </mat-card>
+
+</form>
+
+<!-- <div class='has-error' *ngIf='errorMessage'>{{errorMessage}}</div>
+    </div>
+</div> -->

@@ -4,15 +4,15 @@
 <mat-dialog-content>
     <form class="form-horizontal" novalidate (ngSubmit)="saveProduct()" [formGroup]="productForm">
         <!-- <div class="form-group">
-                <img style="padding-left:100px;" *ngIf='showImage && product.avatar' [src]='product.avatar' [title]='product.product | uppercase'
+                <img style="padding-left:100px;" *ngIf='showImage && inspection.avatar' [src]='inspection.avatar' [title]='inspection.inspection | uppercase'
                     [style.width.px]='imcustomerIdWidth' [style.margin.px]='imcustomerIdMargin'>
             </div> -->
-        <!-- <div class="form-group" [ngClass]="{'has-error': displayMessage.product }">
-                <label class="col-md-2 control-label" for="productId">Product</label>
+        <!-- <div class="form-group" [ngClass]="{'has-error': displayMessage.inspection }">
+                <label class="col-md-2 control-label" for="productId">Inspection</label>
 
                 <div class="col-md-8"> -->
         <mat-form-field class="dialog-field ">
-            <input matInput #productId type="text" placeholder="Product (required)" formControlName="product" />
+            <input matInput #productId type="text" placeholder="Inspection (required)" formControlName="product" />
             <mat-error *ngIf="displayMessage.product ">
                 {{displayMessage.product}}
             </mat-error>

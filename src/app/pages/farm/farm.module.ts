@@ -1,13 +1,13 @@
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { CustomerListComponent } from "./customer-list.component";
+import { FarmListComponent } from "./farm-list.component";
 import {
   CustomerDetailGuard,
   CustomerEditGuard
-} from "./customer-guard.service";
-import { CustomerFormComponent } from "./customer-form.component";
+} from "./farm-guard.service";
+import { FarmFormComponent } from "./farm-form.component";
 
-import { CustomerService } from "./customer.service";
+import { FarmService } from "./farm.service";
 import { SharedModule } from "../../shared/shared.module";
 
 import { MaterialModule } from "../../shared/material.module";
@@ -19,16 +19,16 @@ import { MaterialModule } from "../../shared/material.module";
     // ReactiveFormsModule,
     MaterialModule,
     RouterModule.forChild([
-      { path: "", component: CustomerListComponent },
+      { path: "", component: FarmListComponent },
       {
         path: "new/",
         canDeactivate: [CustomerEditGuard],
-        component: CustomerFormComponent
+        component: FarmFormComponent
       },
       {
         path: "edit/:id",
         canDeactivate: [CustomerEditGuard],
-        component: CustomerFormComponent
+        component: FarmFormComponent
       }
     ])
   ],
@@ -36,16 +36,16 @@ import { MaterialModule } from "../../shared/material.module";
     /**
      * Components / Directives/ Pipes
      */
-    CustomerListComponent,
-    CustomerFormComponent
+    FarmListComponent,
+    FarmFormComponent
   ],
-  providers: [CustomerService, CustomerDetailGuard, CustomerEditGuard,
+  providers: [FarmService, CustomerDetailGuard, CustomerEditGuard,
   ],
   // entryComponents: [MatOption],
   exports: [
-    CustomerListComponent,
-    CustomerFormComponent,
+    FarmListComponent,
+    FarmFormComponent,
 
   ]
 })
-export class CustomerModule { }
+export class FarmModule { }

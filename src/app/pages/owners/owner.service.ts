@@ -9,11 +9,11 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 
 import { IOrder, IAddress } from './owner';
-import { Product } from '../product';
+import { Inspection } from '../inspection';
 
 @Injectable()
 export class OrderService {
-  private basicAction = 'orders/';
+  private basicAction = 'owners/';
 
   constructor(private http: HttpClient, private backend: BackendService) { }
 
@@ -82,7 +82,7 @@ export class OrderService {
       avatar: null,
       reference: null,
       amount: 0,
-      products: Array<Product>(),
+      products: Array<Inspection>(),
       orderDate: null,
       shippedDate: null,
       shipAddress: <IAddress>{},

@@ -9,10 +9,10 @@ import 'rxjs/add/observable/merge';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Product,ProductService } from '../product';
+import { InspectionService } from '../inspection';
 import { NumberValidators } from '../../shared/number.validator';
 import { GenericValidator } from '../../shared/generic-validator';
-import { CustomerService, Customer } from "../customer";
+import { FarmService, Farm } from "../farm";
 
 @Component({
     templateUrl: './product-dialog.component.html',
@@ -23,14 +23,14 @@ export class ProductDialogComponent implements OnInit, AfterViewInit, OnDestroy 
     public readonly ACTION_CANCEL: string = "CANCEL";
     public readonly ACTION_SAVE: string = "SAVE";
 
-    pageTitle: string = 'Add product to order';
+    pageTitle: string = 'Add inspection to order';
     errorMessage: string;
     productForm: FormGroup;
 
-    product: Product;
+    product: any;
     private sub: Subscription;
     showImage: boolean;
-    customers: Customer[];
+    farms: Farm[];
 
     // Use with the generic validation messcustomerId class
     displayMessage: { [key: string]: string } = {};
@@ -40,8 +40,8 @@ export class ProductDialogComponent implements OnInit, AfterViewInit, OnDestroy 
     constructor(private fb: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private productService: ProductService,
-        private customerService: CustomerService,
+        private productService: InspectionService,
+        private farmService: FarmService,
         @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<ProductDialogComponent>
     ) {
 
@@ -54,13 +54,13 @@ export class ProductDialogComponent implements OnInit, AfterViewInit, OnDestroy 
                 maxlength: 'Product first name cannot exceed 100 characters.'
             },
             price: {
-                range: 'Rewards of the product must be between 1 (lowest) and 9999 (highest).'
+                range: 'Rewards of the inspection must be between 1 (lowest) and 9999 (highest).'
             },
             quantity: {
-                range: 'Rewards of the product must be between 1 (lowest) and 20 (highest).'
+                range: 'Rewards of the inspection must be between 1 (lowest) and 20 (highest).'
             },
             customerId: {
-                range: 'Rewards of the product must be between 1 (lowest) and 99999 (highest).'
+                range: 'Rewards of the inspection must be between 1 (lowest) and 99999 (highest).'
             }
         };
 
@@ -78,7 +78,7 @@ export class ProductDialogComponent implements OnInit, AfterViewInit, OnDestroy 
             membership: false,
         });
 
-        // Read the product Id from the route parameter
+        // Read the inspection Id from the route parameter
         this.sub = this.route.params.subscribe(
             params => {
                 let id = +params['id'];
@@ -105,24 +105,24 @@ export class ProductDialogComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     getProduct(id: number): void {
-        this.productService.getProduct(id)
+       /* this.productService.get(id)
             .subscribe(
             (product: Product) => this.onProductRetrieved(product),
             (error: any) => this.errorMessage = <any>error
-            );
+            );*/
     }
 
 
     getCustomers() {
-        this.customerService.getCustomers()
-            .subscribe(customers => {
-                this.customers = customers;
+        this.farmService.getFarms()
+            .subscribe(farms => {
+                this.farms = farms;
             },
             error => this.errorMessage = <any>error);
     }
 
 
-    onProductRetrieved(product: Product): void {
+    onProductRetrieved(product: any): void {
         if (this.productForm) {
             this.productForm.reset();
         }
@@ -148,25 +148,26 @@ export class ProductDialogComponent implements OnInit, AfterViewInit, OnDestroy 
             this.onSaveComplete();
         } else {
             if (confirm(`Really delete the product: ${this.product.productName}?`)) {
-                this.productService.deleteProduct(this.product.id)
+              console.log('yee')
+                /*this.productService.deleteProduct(this.product.id)
                     .subscribe(
                     () => this.onSaveComplete(),
                     (error: any) => this.errorMessage = <any>error
-                    );
+                    );*/
             }
         }
     }
 
     saveProduct(): void {
         if (this.productForm.dirty && this.productForm.valid) {
-            // Copy the form values over the product object values
+            // Copy the form values over the inspection object values
             let p = Object.assign({}, this.product, this.productForm.value);
 
-            this.productService.saveProduct(p)
+            /*this.productService.saveProduct(p)
                 .subscribe(
                 () => this.onSaveComplete(),
                 (error: any) => this.errorMessage = <any>error
-                );
+                );*/
         } else if (!this.productForm.dirty) {
             this.onSaveComplete();
         }

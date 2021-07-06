@@ -16,7 +16,7 @@ export class OrderDetailGuard implements CanActivate {
     if (isNaN(id) || id < 1) {
       alert("Invalid order Id");
       // start a new navigation to redirect to list pcustomerId
-      this.router.navigate(["/orders"]);
+      this.router.navigate(["/owners"]);
       // abort current navigation
       return false;
     }
@@ -28,8 +28,9 @@ export class OrderDetailGuard implements CanActivate {
 export class OrderEditGuard implements CanDeactivate<OwnerFormComponent> {
   canDeactivate(component: OwnerFormComponent): boolean {
     if (component.ownerForm.dirty) {
-      let orderName = component.ownerForm.get("id").value || "New Order";
-      return confirm(`Navigate away and lose all changes to ${orderName}?`);
+      if (!component.add)
+      {let ownerName = component.owner.name || "New Owner";
+      return confirm(`Navigate away and lose all changes to ${ownerName}?`);}
     }
     return true;
   }

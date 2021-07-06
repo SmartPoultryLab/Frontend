@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, CanDeactivate } from '@angular/router';
 
-import { CustomerFormComponent } from './customer-form.component';
+import { FarmFormComponent } from './farm-form.component';
 
 @Injectable()
 export  class CustomerDetailGuard implements CanActivate {
@@ -12,9 +12,9 @@ export  class CustomerDetailGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot): boolean {
         let id = +route.url[1].path;
         if (isNaN(id) || id < 1) {
-            alert('Invalid customer Id');
+            alert('Invalid farm Id');
             // start a new navigation to redirect to list page
-            this.router.navigate(['/customers']);
+            this.router.navigate(['/farms']);
             // abort current navigation
             return false;
         };
@@ -23,12 +23,12 @@ export  class CustomerDetailGuard implements CanActivate {
 }
 
 @Injectable()
-export  class CustomerEditGuard implements CanDeactivate<CustomerFormComponent> {
+export  class CustomerEditGuard implements CanDeactivate<FarmFormComponent> {
 
-    canDeactivate(component: CustomerFormComponent): boolean {
-        if (component.customerForm.dirty) {
-            let customerName = component.customerForm.get('firstname').value || 'New Customer';
-            return confirm(`Navigate away and lose all changes to ${customerName}?`);
+    canDeactivate(component: FarmFormComponent): boolean {
+        if (component.farmForm.dirty) {
+            let farmName = component.farmForm.get('farm_name').value || 'New Farm';
+            return confirm(`Navigate away and lose all changes to ${farmName}?`);
         }
         return true;
     }
