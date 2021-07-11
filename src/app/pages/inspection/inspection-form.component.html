@@ -1,16 +1,6 @@
-<!-- <div class="panel panel-primary">
-    <div class="panel-heading">
-        {{pageTitle}}
-    </div>
 
-    <div class="panel-body">         -->
 <form novalidate (ngSubmit)="saveInspection()" [formGroup]="inspectionForm">
   <mat-card>
-    <!--   <mat-card-header>
-     <mat-card-title class="view-card-title">
-      <h1>{{pageTitle }}</h1>
-    </mat-card-title>
-     </mat-card-header>   -->
 
     <mat-toolbar style="background-color: #FFF">
       <mat-toolbar-row>
@@ -133,7 +123,18 @@
             </mat-form-field>
           </mat-grid-tile>
 
-          <mat-grid-tile [colspan]="fieldColspan">
+          <mat-grid-tile [colspan]="12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Other Notes</mat-label>
+              <input matInput id="other_notes" type="text" placeholder="Other Notes"
+                     formControlName="other_notes" />
+              <mat-error *ngIf="displayMessage.other_notes">
+                {{displayMessage.other_notes}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <!--<mat-grid-tile [colspan]="fieldColspan">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Clinical Signs</mat-label>
               <input matInput id="clinical_signs" type="text" placeholder="Clinical Signs (required)"
@@ -158,25 +159,74 @@
           <mat-grid-tile [colspan]="fieldColspan">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Diagnoses</mat-label>
-              <input matInput id="diagnoses" type="text" placeholder="Diagnoses (required)"
-                     formControlName="diagnoses" />
+              <input matInput id="diagnoses" type="text" placeholder="Diagnoses (required)" formControlName="diagnoses" />
               <mat-error *ngIf="displayMessage.diagnoses">
                 {{displayMessage.diagnoses}}
               </mat-error>
             </mat-form-field>
-          </mat-grid-tile>
+          </mat-grid-tile> -->
 
-          <mat-grid-tile [colspan]="fieldColspan">
-            <mat-form-field class="form-field" appearance="outline">
-              <mat-label>Other Notes</mat-label>
-              <input matInput id="other_notes" type="text" placeholder="Other Notes"
-                     formControlName="other_notes" />
-              <mat-error *ngIf="displayMessage.other_notes">
-                {{displayMessage.other_notes}}
-              </mat-error>
-            </mat-form-field>
-          </mat-grid-tile>
+          <mat-grid-tile [colspan]="12" [rowspan]="5">
+          <mat-tab-group class="form-tabs" mat-align-tabs="center">
 
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <div class="tab-header"><i class="fas fa-history"></i> History</div>
+              </ng-template>
+              <div class="from-tab">
+                <app-inspection-history [Inspections]="InspectionHistory"></app-inspection-history>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <div class="tab-header"><i class="fas fa-microscope"></i>Examination</div>
+              </ng-template>
+              <div class="from-tab">
+                <app-inspection-examination (onDataChanged)="onExamChange($event)" [ExamData]="exam_data"></app-inspection-examination>
+              </div>
+            </mat-tab>
+      <!--
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <div class="tab-header"><i class="fas fa-capsules"></i> Treatment</div>
+              </ng-template>
+              <div class="from-tab">
+                Treatment
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <div class="tab-header"><i class="fas fa-syringe"></i> Vaccinations</div>
+              </ng-template>
+              <div class="from-tab">
+                Vaccinations
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <div class="tab-header"><i class="fas fa-notes-medical"></i> Medicament and Vaccination History</div>
+              </ng-template>
+              <div class="from-tab">
+                Medicament and Vaccination History
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <div class="tab-header"><i class="fas fa-info-circle"></i> Farm Info</div>
+              </ng-template>
+              <div class="from-tab">
+                Farm Info
+              </div>
+            </mat-tab>
+
+          -->
+
+          </mat-tab-group>
+          </mat-grid-tile>
         </mat-grid-list>
     </div>
 

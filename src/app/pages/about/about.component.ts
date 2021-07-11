@@ -22,8 +22,29 @@ const newLocal: string = `
     .content {
       padding: 26px;
       font-size: 18px;
+      text-align: center;
+      line-height: 2em;
+    }
+    .logo-img{
+    margin-left:100px;
+    }
+    .logo-img img{
+      width:200px;
+      margin-right:100px;
+    }
+    .announcement{
+    padding: 26px;
+      font-size: 18px;
       text-align: left;
       line-height: 2em;
+    }
+    .announcement img{
+    width:250px;
+    }
+    .footer-test{
+      display:flex;
+      flex-direction:row;
+      justify-content:space-around;
     }
   `;
 
@@ -34,12 +55,35 @@ const newLocal: string = `
   ],
   template: `
     <div class="about-card">
+      <div class="logo-img">
+        <img src="/assets/img/logo.png">
+        <img src="http://www.aast.edu/getData/retreiveOnePIC.php?unit=353&img=1_1_1_unnamed.png">
+      </div>
       <p class="subheader">
-        NG CRM 2.0
+        Smart Poultry Laboratory
       </p>
       <p class="content">
-        This demo app is not a real application. There is no back-end service behind the scene. Any data update (create or update record) will not be stored after hard refresh or logout. The main purpose of this demo is just a proof of concept.
+        This Project was developed as a graduation project for Arab Academy for science, technology and maritime transport<br>
+        Smart Poultry Laboratory is an application that aims to help vets to manage farm's
+        lifecycles and differentiate between diseases in the postmortem form due to the similar
+        symptoms form the examination data.
       </p>
+      <div class="footer-test">
+        <div class="announcement">
+          <b>Supervised by :</b><br>
+          <i>Prof.Dr Emad El-Samahy<br>
+            Prof.Dr Fahima Maghraby</i><br>
+        </div>
+        <div class="announcement">
+          <b>Developed by :</b><br>
+          Mohamed Ahmed Shawky<br>
+          Ali Gamal ElKelany<br>
+          Ahmed El Saify<br>
+          Omar Ahmed El Baz<br>
+          Lo'ay Ehab Mokhtar<br>
+        </div>
+      </div>
+
     </div>
 
   `

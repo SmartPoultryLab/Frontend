@@ -54,6 +54,12 @@ const routes: Routes = [
     import('./pages/inspection/inspection.module').then(m => m.InspectionModule)
     , canActivate: [AuthGuard]
   },
+  {
+    path: "profile",
+    loadChildren: () =>
+      import('./pages/profile/profile.module').then(m => m.ProfileModule)
+    , canActivate: [AuthGuard]
+  },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: "**",

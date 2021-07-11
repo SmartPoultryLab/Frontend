@@ -123,6 +123,19 @@ export class BackendService {
     }))
   }
 
+  upload(endpoint:string,filesArr:File[]){
+    const self = this;
+    const headers = self.authService.makeJwtHeaders();
+    const url = `${APIConf.baseURL}${endpoint}`;
+    return new Promise(function (resolve, reject) {
+      self.http.post(url, filesArr,{headers}).subscribe(data => {
+        resolve(data);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
   doPost(endpoint:string,data: any) {
     const self = this;
     const headers = self.authService.makeJwtHeaders();

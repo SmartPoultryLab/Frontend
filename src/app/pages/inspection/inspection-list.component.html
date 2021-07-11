@@ -24,7 +24,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <div *ngIf="farmsList.length === 0" class="no-data">No data</div>
+        <div *ngIf="farmsListFilterd.length === 0" class="no-data">No data</div>
       </div>
       </div>
 
@@ -53,6 +53,15 @@
   </mat-toolbar>
 
   <mat-table #table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="owner_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Owner Name </mat-header-cell>
+      <mat-cell *matCellDef="let inspection"> {{ inspection.owner_name }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="farm_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Farm Name </mat-header-cell>
+      <mat-cell *matCellDef="let inspection"> {{ inspection.farm_name }}</mat-cell>
+    </ng-container>
+
     <ng-container matColumnDef="inspection_date">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Inspection date </mat-header-cell>
       <mat-cell *matCellDef="let inspection">

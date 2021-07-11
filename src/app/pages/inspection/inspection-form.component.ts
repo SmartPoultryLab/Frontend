@@ -28,38 +28,19 @@ import { GenericValidator } from "../../shared/generic-validator";
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Farm } from '../farm';
 import {tryCatch} from "rxjs/internal-compatibility";
+import {NotificationsService} from "../../_services/notification.service";
+import {ExaminationData} from "./components/inspection-examination/examination";
 
 @Component({
   selector: 'product-form',
   templateUrl: "./inspection-form.component.html",
-  styles: [
-    `
-    .title-spacer {
-      flex: 1 1 auto;
-    }
-  .form-field{
-      width: 100%;
-      margin-left: 20px;
-      margin-right: 20px;
-    }
-  .farm-info{
-    font-family: Arial;
-    font-size: 16px;
-    border:solid 1px lightgrey;
-    border-radius: 3px;
-    display: flex;
-    justify-content:space-evenly;
-    flex-direction: row;
-    margin:20px;
-  }
-
-
-    `]
+  styleUrls: ["./inspection-form-component.css"],
 })
 export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(FormControlName, { read: ElementRef })
   formInputElements: ElementRef[];
   farm_data: Farm;
+  farm_inspections:Inspection[] = [];
   pageTitle: string = "Update Inspection";
   errorMessage: string;
   inspectionForm: FormGroup;
@@ -68,7 +49,7 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
   inspection_id:number = 0;
   private sub: Subscription;
   showImage: boolean;
-  fieldColspan = 4;
+  fieldColspan = 6;
   // Use with the generic validation messageId class
   displayMessage: { [key: string]: string } = {};
   private validationMessages: { [key: string]: { [key: string]: string } } = {
@@ -83,7 +64,7 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
     dead_last_3_days: {
       required: "DL3D number is required.",
       min:
-        "can't be less than 1"
+        "can't be less than 0"
     },
     feed_consumption: {
       required: "Feed consumption is required.",
@@ -101,13 +82,13 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
         "can't be less than 1"
     },
     clinical_signs: {
-      required: "Inspection date name is required.",
+      required: "Clinical signs are required.",
     },
     pm_lesions: {
-      required: "Inspection date name is required.",
+      required: "Pm lesions are required.",
     },
     diagnoses: {
-      required: "Inspection date name is required.",
+      required: "Diagnoses is required.",
     },
   }
 
@@ -118,7 +99,8 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
     private route: ActivatedRoute,
     private router: Router,
     private inspectionService: InspectionService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private notify:NotificationsService,
   ) {
     breakpointObserver.observe([
       Breakpoints.HandsetLandscape,
@@ -127,10 +109,13 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
       // console.log(result)
       this.onScreensizeChange();
     });
-    try {
+    if (this.router.getCurrentNavigation().extras.state){
+      this.farm_inspections = this.router.getCurrentNavigation().extras.state.farm_inspections;
       this.farm_data = this.router.getCurrentNavigation().extras.state.farm
-    } catch (err){
-      this.router.navigate(['/inspections']);
+    } else {
+      this.farm_data= <Farm>{id:0,farm_name:"Test",start_date:"2021/07/06"}
+      this.router.navigate([`/inspections/edit/${0}`],{state:{ farm:this.farm_data,farm_inspections:[] }} );
+      //this.router.navigate(['/inspections']);
     }
 
     this.genericValidator = new GenericValidator(this.validationMessages);
@@ -143,7 +128,7 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
       current_age: ["", [Validators.required,Validators.min(1)]],
       age_unit: ["", [Validators.required]],
 
-      dead_last_3_days: ["", [Validators.required,Validators.min(1)]],
+      dead_last_3_days: ["", [Validators.required,Validators.min(0)]],
 
       feed_consumption: ["", [Validators.required,Validators.min(1)]],
       feed_unit: ["", [Validators.required]],
@@ -155,10 +140,11 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
       weight_unit: ["", [Validators.required]],
 
       other_notes: ["",],
-      clinical_signs: ["", [Validators.required]],
-      pm_lesions: ["", [Validators.required]],
-      diagnoses: ["", [Validators.required]],
+      clinical_signs: ["", ],
+      pm_lesions: ["", ],
+      diagnoses: ["", ],
     });
+
     this.sub = this.route.params.subscribe(params => {
       this.inspection_id = +params["id"];
       if (this.inspection_id==0)
@@ -168,9 +154,19 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
     });
 
   }
-
+  get InspectionHistory():Inspection[]{
+    return this.farm_inspections.filter(inspection=>inspection.id != this.inspection_id );
+  }
   ngOnDestroy(): void {
     this.sub.unsubscribe();
+  }
+
+  exam_data:ExaminationData = <ExaminationData>{};
+  onExamChange(data:ExaminationData){
+    this.exam_data.Clinical_Signs = data.Clinical_Signs
+    this.exam_data.PM_Lesions = data.PM_Lesions
+    this.exam_data.Diagnoses = data.Diagnoses
+
   }
 
   ngAfterViewInit(): void {
@@ -219,7 +215,11 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
     } else {
       this.pageTitle = `Update Inspection: ${inspection.id} `;
     }
-
+      this.exam_data = {
+        Clinical_Signs : this.inspection.clinical_signs,
+        PM_Lesions : this.inspection.pm_lesions,
+        Diagnoses : this.inspection.diagnoses,
+      }
     // Update the data on the form
     this.inspectionForm.patchValue({
       inspection_date: this.inspection.inspection_date,
@@ -238,9 +238,8 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
       weight_unit: this.Units.getUnit(this.inspection.average_weight.unit),
 
       other_notes: this.inspection.other_notes,
-      clinical_signs: this.inspection.clinical_signs,
-      pm_lesions: this.inspection.pm_lesions,
-      diagnoses: this.inspection.diagnoses,
+
+
     });
   }
 
@@ -272,9 +271,9 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
       newInspection.water_consumption = <MeasuredData>{value:this.inspectionForm.controls['water_consumption'].value,unit:this.inspectionForm.controls['water_unit'].value};
       newInspection.average_weight = <MeasuredData>{value:this.inspectionForm.controls['average_weight'].value,unit:this.inspectionForm.controls['weight_unit'].value};
       newInspection.other_notes = this.inspectionForm.controls['other_notes'].value;
-      newInspection.clinical_signs = this.inspectionForm.controls['clinical_signs'].value;
-      newInspection.pm_lesions = this.inspectionForm.controls['pm_lesions'].value;
-      newInspection.diagnoses = this.inspectionForm.controls['diagnoses'].value;
+      newInspection.clinical_signs = this.exam_data.Clinical_Signs;
+      newInspection.pm_lesions = this.exam_data.PM_Lesions;
+      newInspection.diagnoses = this.exam_data.Diagnoses;
       this.inspectionService
         .saveInspection(newInspection)
         .subscribe(
@@ -288,6 +287,7 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
 
   onSaveComplete(): void {
     // Reset the form to clear the flags
+    this.notify.toast('success','Inspection Added');
     this.inspectionForm.reset();
     this.router.navigate(["/inspections"]);
   }
@@ -304,7 +304,7 @@ export class InspectionFormComponent implements OnInit, AfterViewInit, OnDestroy
       }
     }
     else {
-      this.fieldColspan = 3;
+      this.fieldColspan = 4;
     }
   }
 }

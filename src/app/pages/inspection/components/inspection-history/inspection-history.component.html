@@ -1,0 +1,45 @@
+<mat-table #table [dataSource]="dataSource" matSort>
+
+  <ng-container matColumnDef="inspection_date">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Inspection date </mat-header-cell>
+    <mat-cell *matCellDef="let inspection">
+      {{getDate(inspection.inspection_date) | date:'MM/dd/yyyy' }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="current_age">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Age </mat-header-cell>
+    <mat-cell *matCellDef="let inspection"> {{ inspection.current_age.value }} {{ inspection.current_age.unit.name }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="dead_last_3_days">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Dead Birds Record </mat-header-cell>
+    <mat-cell *matCellDef="let inspection"> {{ inspection.dead_last_3_days }} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="feed_consumption">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Food Consumption/Day </mat-header-cell>
+    <mat-cell *matCellDef="let inspection"> {{ inspection.feed_consumption.value }} {{ inspection.feed_consumption.unit.name }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="water_consumption">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Water Consumption/Day </mat-header-cell>
+    <mat-cell *matCellDef="let inspection"> {{ inspection.water_consumption.value }} {{ inspection.water_consumption.unit.name }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="average_weight">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Average Weight </mat-header-cell>
+    <mat-cell *matCellDef="let inspection"> {{ inspection.average_weight.value }} {{ inspection.average_weight.unit.name }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="diagnoses">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Diagnoses </mat-header-cell>
+    <mat-cell *matCellDef="let inspection"> {{ inspection.diagnoses }}</mat-cell>
+  </ng-container>
+
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+<mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10]">
+</mat-paginator>

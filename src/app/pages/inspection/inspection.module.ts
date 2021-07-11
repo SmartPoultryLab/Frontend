@@ -10,6 +10,9 @@ import { InspectionService } from "./inspection.service";
 import { SharedModule } from "../../shared/shared.module";
 import { MaterialModule } from "../../shared/material.module";
 import { FarmService} from "../farm";
+import { InspectionHistoryComponent } from './components/inspection-history/inspection-history.component';
+import { InspectionExaminationComponent } from './components/inspection-examination/inspection-examination.component';
+import { MultiselectAutocompleteComponent } from './components/multiselect-autocomplete/multiselect-autocomplete.component';
 
 @NgModule({
   imports: [
@@ -30,7 +33,10 @@ import { FarmService} from "../farm";
      * Components / Directives/ Pipes
      */
     InspectionListComponent,
-    InspectionFormComponent
+    InspectionFormComponent,
+    InspectionHistoryComponent,
+    InspectionExaminationComponent,
+    MultiselectAutocompleteComponent
   ],
   providers: [InspectionService, ProductDetailGuard, ProductEditGuard,FarmService],
   exports: [

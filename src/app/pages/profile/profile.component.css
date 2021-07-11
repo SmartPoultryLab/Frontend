@@ -1,0 +1,58 @@
+thead {
+  color: #337ab7;
+}
+
+.title-spacer {
+  flex: 1 1 auto;
+}
+
+.view-card-content{
+  width:100%;
+}
+.profile-info-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:center;
+}
+
+.profile-card{
+  width:180px;
+  padding: 20px;
+  border: #337AB7 3px solid;
+  border-radius:10px ;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+.profile-card div{
+  margin-top: 10px;
+}
+.information{
+  text-align: center;
+}
+.avatar{
+  align-self: center;
+}
+.avatar img{
+  width:100px;
+  height: 100px;
+  border-radius: 10px;
+}
+.profile-actions{
+  width:220px;
+  display: flex;
+  flex-direction: column;
+}
+.profile-actions button{
+  margin-top:10px;
+
+  width:100%;
+  color:white;
+}
+.blue-btn{
+  background: #337AB7;
+}
+.red-btn{
+  background: darkred;
+}

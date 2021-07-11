@@ -91,12 +91,6 @@ export class InspectionService {
       })
     }));
   }
-
-  decodeInspection(inspection:Inspection):Inspection{
-    let decoded_inspection = inspection;
-    return decoded_inspection
-  }
-
   initializeInspection(farm_id?:number): Inspection {
     // Return an initialized object
     const id = farm_id ? farm_id : 0;

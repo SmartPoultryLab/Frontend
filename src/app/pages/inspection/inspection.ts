@@ -1,4 +1,6 @@
 /* Defines the inspection entity */
+import {throwError} from "rxjs";
+
 export interface BasicInspection {
   id:number,
   farm_id:number,
@@ -9,12 +11,14 @@ export interface BasicInspection {
   water_consumption:MeasuredData,
   average_weight:MeasuredData,
   other_notes:string,
-  clinical_signs:string,
-  pm_lesions:string,
-  diagnoses:string,
+  clinical_signs:string[],
+  pm_lesions:string[],
+  diagnoses:string[],
 }
+
 export interface Inspection extends BasicInspection{
   farm_name?:string,
+  owner_name?:string,
 }
 
 export interface Unit{
@@ -52,4 +56,19 @@ const getUnit = function(unit:Unit){
     case "age":{return Units.age.find(xunit=>xunit.name==unit.name);}
   }
 }
+
+function convert(Data:MeasuredData,unit2:Unit,type:Unit[]){
+    const d_ratio = type[0].value;
+    let value = Data.value * d_ratio
+}
+
+/*const ConvertToUnit = function(Data:MeasuredData,unit:Unit):MeasuredData{
+  if (Data.unit.type != unit.type){
+    throwError("Unit's have different types")
+  } else{
+    switch (unit.type){
+      case "water":{return convert();}
+    }
+  }
+}*/
 export const Units = {mass:MassUnits,age:AgeUnits,water:WaterUnits,getUnit:getUnit}

@@ -1,0 +1,28 @@
+<!-- <mat-sidenav-container> -->
+<mat-card class='light' style="height: 100%;">
+  <mat-card-header>
+    <mat-card-title class="view-card-title">
+      <h1>Profile</h1>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="view-card-content">
+      <div class="profile-info-container">
+        <div class="profile-card">
+          <div class="avatar">
+            <img [src]="userInfo.avatarUrl" alt="avatar">
+          </div>
+          <div class="information">
+            <div style="color:black;font-family: Lato,sans-serif">{{userInfo.fullName}}</div>
+            <div style="color:gray;font-family: Lato,sans-serif">{{userInfo.email}}</div>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <button mat-button class="blue-btn" (click)="openProfileDialog()">Edit Profile</button>
+          <button mat-button class="blue-btn" (click)="openPasswordDialog()">Change Password</button>
+          <button mat-button class="red-btn" (click)="doLogout()">Logout</button>
+        </div>
+      </div>
+  </mat-card-content>
+</mat-card>

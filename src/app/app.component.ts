@@ -67,7 +67,6 @@ export class AppComponent implements OnInit, OnChanges, OnDestroy {
   logout(): void {
     // localStorage.removeItem('currentUser');
     this.authService.logout()
-    this.router.navigate(['login']);
   }
 
   activateLoading(state?: boolean): void {

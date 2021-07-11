@@ -1,0 +1,17 @@
+<div class="exam-form">
+  <mat-card-content>
+    <mat-grid-list cols="12" rowHeight="80px">
+    <mat-grid-tile [colspan]="12">
+      <app-multiselect-autocomplete [selectedValues]="ExamData.Clinical_Signs" [allValues]="Clinical_Signs_Data" [name]="'Clinical Signs (Required)'" style="width: 100%" (onDataChanged)="Clinical_Changed($event)"></app-multiselect-autocomplete>
+    </mat-grid-tile>
+      <mat-grid-tile [colspan]="12">
+        <app-multiselect-autocomplete [selectedValues]="ExamData.PM_Lesions" [allValues]="PM_Lesions_Data" [name]="'PM Lesions (Required)'" style="width: 100%" (onDataChanged)="PM_Lesions_Changed($event)"></app-multiselect-autocomplete>
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]="12">
+        <app-multiselect-autocomplete [selectedValues]="ExamData.Diagnoses" [allValues]="Diganoses_Data" [name]="'Diagnoses (Required)'" style="width: 100%" (onDataChanged)="Diganoses_Changed($event)"></app-multiselect-autocomplete>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-card-content>
+</div>
+
+

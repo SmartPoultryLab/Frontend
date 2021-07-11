@@ -2,42 +2,49 @@ import { APIConf } from './APIConf';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import 'rxjs/add/operator/map'
-import { User } from '../_models'
+import {BasicUser, User} from '../_models'
 import { Observable } from 'rxjs/Rx';
 
 
 const APP_USER_PROFILE = "NG_CRM_USER_2.0"
 @Injectable()
 export class AuthenticationService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private router:Router) { }
 
   login(user: User) {
     return this.apiCall('login', user).map((response: Response) => {
-      this.doAuth(response);
+      AuthenticationService.doAuth(response);
     });
   }
   /**/
   register(userData: User) {
     return this.apiCall('register', userData).map((response: Response) => {
-      this.doAuth(response);
+      AuthenticationService.doAuth(response);
     });
   }
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem(APP_USER_PROFILE);
+    this.router.navigate(['login']);
+  }
+
+  updateUserData(new_user:User){
+    let old_user = this.getUser();
+    old_user.fullName = new_user.fullName;
+    old_user.avatarUrl = new_user.avatarUrl;
+    old_user.email = new_user.email;
+    localStorage.setItem(APP_USER_PROFILE, JSON.stringify(old_user));
   }
 
   isAuthenticated() {
     let user =   this.getUser() // <User>JSON.parse(localStorage.getItem(APP_USER_PROFILE));
-    return user && user.isAuthenticated ? true : false;
+    return user && user.isAuthenticated;
   }
 
   getUser(){
-    let user = <User>JSON.parse(localStorage.getItem(APP_USER_PROFILE));
-    return user;
+    return <User>JSON.parse(localStorage.getItem(APP_USER_PROFILE));
   }
-  private doAuth(response: Response) {
-
+  private static doAuth(response: Response):void {
     const data = (<any>response);
     const user = <User>data.user;
     if (user && data.access_token) {
@@ -70,6 +77,7 @@ export class AuthenticationService {
 
 
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {Router} from "@angular/router";
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private authServ:AuthenticationService) { }

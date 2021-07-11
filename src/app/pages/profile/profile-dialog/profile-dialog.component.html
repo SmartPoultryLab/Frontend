@@ -1,0 +1,111 @@
+
+<div class="profile-dialog" *ngIf="!data.isPassword">
+  <form novalidate (ngSubmit)="saveProfile()" [formGroup]="userForm">
+  <div class="profile-card">
+    <div class="avatar">
+      <img [src]="data.user.avatarUrl" alt="avatar">
+    </div>
+    <div class="information">
+      <div class="form-card">
+
+        <div class="input-field">
+          <div class="avatar-selection">
+            <input
+              formControlName="avatar"
+              id="avatar"
+              type="file"
+              class="custom-file-input"
+              placeholder="Upload Avatar"
+              accept="image/*"
+              (change)="onChange($event)">
+          </div>
+        </div>
+
+        <div class="input-field">
+          <mat-form-field class="form-field" appearance="outline">
+            <input matInput id="fullName" type="text" placeholder="Full Name"
+                   formControlName="fullName" />
+            <mat-error *ngIf="displayMessage.fullName">
+              {{displayMessage.fullName}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="input-field">
+          <mat-form-field class="form-field" appearance="outline">
+            <input matInput id="email" type="text" placeholder="Email"
+                   formControlName="email" />
+            <mat-error *ngIf="displayMessage.email">
+              {{displayMessage.email}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="btn-theme">
+          <div class="btn-c">
+            <button mat-button class="blue-btn" (click)="saveProfile()">Save</button>
+          </div>
+          <div class="btn-c">
+            <button mat-button class="red-btn" (click)="onNoClick($event)">Close</button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- inspection list -->
+
+
+      <div class='has-error' *ngIf='errorMessage'>{{errorMessage}}</div>
+    </div>
+  </div>
+
+  </form>
+</div>
+
+
+<div class="profile-dialog" *ngIf="data.isPassword">
+  <form class="loginForm" name="form" (ngSubmit)="f.form.valid && savePassword()" #f="ngForm" novalidate>
+    <div class="profile-card">
+      <div class="information">
+        <div class="form-card">
+
+          <div class="input-field">
+              <mat-form-field class="form-field" appearance="outline" style="display: block" [ngClass]="{ 'display': 'block','mat-input-error': f.submitted && password.dirty && password.errors && password.errors.required }">
+                <input matInput type="password" placeholder="Password" name="password" [(ngModel)]="model.password"
+                       #password="ngModel" compare-password="password_confirmation" parent="true" required />
+              </mat-form-field>
+          </div>
+
+          <div class="input-field">
+            <mat-form-field class="form-field" appearance="outline" style="display: block"
+                            [ngClass]="{ 'display': 'block','mat-input-error': f.submitted && !password_confirmation.valid }">
+              <input matInput type="password" placeholder="Confirm Password" name="password_confirmation" [(ngModel)]="model.password_confirmation"
+                     #password_confirmation="ngModel" compare-password="password" required />
+              <span class="text-danger"
+                    *ngIf="password_confirmation.dirty && password_confirmation.errors && password_confirmation.errors.required">Password is
+              required </span>
+              <span class="text-danger"
+                    *ngIf="password_confirmation.dirty && ((password.errors && password.errors.compare) || (password_confirmation.errors && password_confirmation.errors.compare)) && !password_confirmation.errors.required">Password
+              Doesn't match</span>
+            </mat-form-field>
+          </div>
+
+          <div class="btn-theme">
+            <div class="btn-c">
+              <button mat-button class="blue-btn">Save</button>
+            </div>
+            <div class="btn-c">
+              <button mat-button class="red-btn" (click)="onNoClick($event)">Close</button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class='has-error' *ngIf='errorMessage'>{{errorMessage}}</div>
+      </div>
+    </div>
+
+  </form>
+</div>

@@ -35,6 +35,6 @@ export class ComparePassword implements Validator {
     if (!this.parent) {
         return false;
     }
-    return this.parent === 'true' ? true : false;
+    return this.parent === 'true';
   }
 }

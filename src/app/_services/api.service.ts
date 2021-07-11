@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Rx';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import {Farm} from "../pages/farm";
+import {Password_Parameters, User} from "../_models";
 
 @Injectable({ providedIn: 'root'})
 export class APIService {
@@ -94,8 +95,62 @@ export class APIService {
       })
     }))
   }
+public updatePhoto(file:File){
+    const self = this;
+    self.loader.show();
+    return Observable.fromPromise(new Promise(function(resolve,reject){
+      self.backend.doPost(`users`,file).then((response:any)=>{
+        self.loader.hide();
+        resolve(response);
+      }).catch(err=>{
+        self.HandleErr(err);
+        reject(err);
+      })
+    }))
+}
 
+public getUser():Observable<User>{
+  const self = this;
+  self.loader.show();
+  return Observable.fromPromise(new Promise(function(resolve,reject){
+    self.backend.doGet(`me`).then((response:User)=>{
+      self.loader.hide();
+      resolve(response);
+    }).catch(err=>{
+      self.HandleErr(err);
+      reject(err);
+    })
+  }))
+}
 
+public ChangePassword(pswd:Password_Parameters){
+  const self = this;
+  self.loader.show();
+  return Observable.fromPromise(new Promise(function(resolve,reject){
+    self.backend.doPost(`changepwd`,pswd).then((response:any)=>{
+      self.loader.hide();
+      resolve(response);
+    }).catch(err=>{
+      self.HandleErr(err);
+      reject(err);
+    })
+  }))
+}
+
+public updateUser(user:User){
+  const self = this;
+  self.loader.show();
+
+  return Observable.fromPromise(new Promise(function(resolve,reject){
+    self.backend.doPost(`users`,user).then((response:any)=>{
+      self.loader.hide();
+      resolve(response);
+    }).catch(err=>{
+      self.HandleErr(err);
+      reject(err);
+    })
+  }))
+}
 
 
 

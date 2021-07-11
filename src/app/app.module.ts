@@ -18,37 +18,36 @@ import { NotFoundPageComponent } from './notfoundpage';
 import { ConfirmDialog,MaterialModule } from './shared';
 import { LoadingComponent } from  './loading';
 import { AuthGuard } from './_guard';
-
 @NgModule({
-  declarations: [
-    LoginComponent,
-    DashboardComponent,
-    AboutComponent,
-    RegisterComponent,
-    NotFoundPageComponent,
-    ConfirmDialog,
-    LoadingComponent,
-    AppComponent,
-    ComparePassword,
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    SharedModule,
-    MaterialModule,
-    HttpClientModule,
-    NgxSpinnerModule,
-    // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    ChartsModule,
-    AppRoutingModule
-  ],
-  providers: [
-    AuthGuard,
-    BackendService,
-    AuthenticationService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
-  ],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    declarations: [
+        LoginComponent,
+        DashboardComponent,
+        AboutComponent,
+        RegisterComponent,
+        NotFoundPageComponent,
+        ConfirmDialog,
+        LoadingComponent,
+        AppComponent,
+        ComparePassword,
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        SharedModule,
+        MaterialModule,
+        HttpClientModule,
+        NgxSpinnerModule,
+        // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+        ChartsModule,
+        AppRoutingModule,
+    ],
+    providers: [
+        AuthGuard,
+        BackendService,
+        AuthenticationService,
+        {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    ],
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

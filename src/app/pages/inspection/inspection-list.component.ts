@@ -13,6 +13,7 @@ import {Farm, FarmService} from "../farm";
 import {Owner} from "../../_models";
 import {Router} from "@angular/router";
 import {NotificationsService} from "../../_services/notification.service";
+import {ExaminationData} from "./components/inspection-examination/examination";
 
 
 @Component({
@@ -36,7 +37,7 @@ export class InspectionListComponent implements OnInit {
     ownersList:Owner[] = [];
     farmsList:Farm[] = [];
     farmsListFilterd:Farm[]=[];
-    displayedColumns = ["inspection_date", "current_age", "dead_last_3_days", "average_weight", "id"];
+    displayedColumns = ["owner_name","farm_name","inspection_date", "current_age", "dead_last_3_days", "average_weight", "id"];
     dataSource: any = null;
     pager: any = {};
     pagedItems: any[];
@@ -54,9 +55,6 @@ export class InspectionListComponent implements OnInit {
         public dialog: MatDialog, public snackBar: MatSnackBar) {
     }
 
-    toggleImage(): void {
-        this.showImage = !this.showImage;
-    }
 
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
@@ -72,8 +70,9 @@ export class InspectionListComponent implements OnInit {
       else
       {
         let farmData = this.farmsList.find(farm=>farm.id == farm_id);
-        farmData.num_of_visits = this.inspections.filter(inspection=> inspection.farm_id == farm_id).length
-        this.router.navigate([`/inspections/edit/${inspection_id}`],{state:{ farm:farmData }} );
+        let farm_inspections = this.inspections.filter(inspection=> inspection.farm_id == farm_id)
+        farmData.num_of_visits = farm_inspections.length
+        this.router.navigate([`/inspections/edit/${inspection_id}`],{state:{ farm:farmData,farm_inspections:farm_inspections }} );
       }
     }
     freshDataList(inspections: Inspection[]) {
